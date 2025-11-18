@@ -24,7 +24,14 @@ export async function generateEssayTopic(): Promise<GenerateEssayTopicOutput> {
 const generateEssayTopicPrompt = ai.definePrompt({
   name: 'generateEssayTopicPrompt',
   output: {schema: GenerateEssayTopicOutputSchema},
-  prompt: `You are a creative writing assistant. Generate a random and engaging essay topic that students can use to practice their writing skills. The topic should be suitable for a high school or early college level essay.`,
+  prompt: `Você é um especialista em criar temas de redação para o ENEM. Sua tarefa é gerar um tema aleatório, relevante e desafiador, no exato formato que apareceria na prova. O tema deve ser uma frase concisa que aborde um problema social, cultural ou científico pertinente ao Brasil.
+
+Exemplos de temas no formato correto:
+- "O estigma associado às doenças mentais na sociedade brasileira"
+- "Desafios para a valorização de comunidades e povos tradicionais no Brasil"
+- "Democratização do acesso ao cinema no Brasil"
+
+Gere um novo tema nesse padrão.`,
 });
 
 const generateEssayTopicFlow = ai.defineFlow(
