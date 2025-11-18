@@ -5,17 +5,14 @@ import { useState, useTransition, useEffect } from "react";
 import { provideAiFeedbackOnEssay, ProvideAiFeedbackOnEssayOutput } from "@/ai/flows/provide-ai-feedback-on-essay";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Lightbulb, Loader2, Sparkles, Info, AlertTriangle, Pencil } from "lucide-react";
+import { Lightbulb, Loader2, Sparkles, Info, AlertTriangle, Pencil, Eye, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-
 
 type WritingEditorProps = {
   topic?: string;
@@ -71,8 +68,8 @@ function Timer({ time, setTime }: { time: number; setTime: (time: number) => voi
   );
 }
 
-function FeedbackDialog({ feedback, open, onOpenChange }: { feedback: ProvideAiFeedbackOnEssayOutput | null, open: boolean, onOpenChange: (open: boolean) => void }) {
-    if (!feedback) return null;
+function FeedbackResult({ feedback }: { feedback: ProvideAiFeedbackOnEssayOutput }) {
+    const [isRevealed, setIsRevealed] = useState(false);
 
     const competencies = [
         { name: "Competência 1", score: feedback.competencia1.score, feedback: feedback.competencia1.feedback, description: "Demonstrar domínio da modalidade escrita formal da Língua Portuguesa." },
@@ -93,62 +90,75 @@ function FeedbackDialog({ feedback, open, onOpenChange }: { feedback: ProvideAiF
     }
 
     const zeroGradeReason = getZeroGradeReason();
+    const isZeroGrade = !!zeroGradeReason;
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-4xl p-0 max-h-[90vh] flex flex-col">
-                <DialogHeader className="p-6 pb-4 border-b">
-                    <DialogTitle className="flex items-center gap-2 font-headline text-2xl">
-                        <Sparkles className="text-primary"/>
-                        Feedback da IA
-                    </DialogTitle>
-                    <DialogDescription>Aqui está a análise completa da sua redação.</DialogDescription>
-                </DialogHeader>
+        <div className="mt-8 space-y-6 animate-in fade-in-50 duration-500">
+            <header className="text-center border-b pb-4">
+                <h2 className="text-2xl font-bold font-headline flex items-center justify-center gap-2">
+                    <CheckCircle className="text-primary"/>
+                    Correção Finalizada
+                </h2>
+                <p className="text-muted-foreground">Aqui está a análise completa da sua redação.</p>
+            </header>
 
-                <ScrollArea className="flex-grow min-h-0">
-                    <div className="p-6 space-y-6">
-                        {zeroGradeReason ? (
-                            <Alert variant="destructive">
-                                <AlertTriangle className="h-4 w-4" />
-                                <AlertTitle>Redação Zerada</AlertTitle>
-                                <AlertDescription>{zeroGradeReason}</AlertDescription>
-                            </Alert>
-                        ) : null}
+            {isZeroGrade ? (
+                <Alert variant="destructive">
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertTitle>Redação Zerada</AlertTitle>
+                    <AlertDescription>{zeroGradeReason}</AlertDescription>
+                </Alert>
+            ) : null}
 
-                        <Card className="bg-muted/30 text-center">
-                            <CardHeader>
-                                <CardDescription className="uppercase font-semibold tracking-wider">Nota Geral</CardDescription>
-                                <CardTitle className="text-6xl font-bold text-primary">{feedback.notaGeral}</CardTitle>
-                                <p className="text-muted-foreground">/ 1000</p>
-                            </CardHeader>
-                        </Card>
-                        
-                        <div className="space-y-4">
-                            {competencies.map((comp, index) => (
-                                <Card key={index} className="overflow-hidden">
-                                    <CardHeader className="bg-muted/30">
-                                        <div className="flex items-center justify-between w-full">
-                                            <div className="flex items-start gap-3">
-                                                <Info className="w-4 h-4 mt-1 shrink-0 text-muted-foreground" />
-                                                <div className="flex flex-col">
-                                                    <CardTitle className="text-base font-semibold">{comp.name}</CardTitle>
-                                                    <CardDescription className="text-xs">{comp.description}</CardDescription>
-                                                </div>
-                                            </div>
-                                            <span className="text-lg ml-4 font-bold">{comp.score} / 200</span>
-                                        </div>
-                                    </CardHeader>
-                                    <CardContent className="p-4 space-y-3">
-                                        <Progress value={comp.score / 2} className="h-2" />
-                                        <p className="text-sm text-muted-foreground prose prose-sm max-w-none whitespace-pre-wrap leading-relaxed">{comp.feedback}</p>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </div>
+            <Card className="text-center relative overflow-hidden">
+                <CardHeader>
+                    <CardDescription className="uppercase font-semibold tracking-wider">Nota Geral</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className={cn(
+                        "text-7xl font-bold text-primary transition-all duration-300",
+                        !isRevealed && !isZeroGrade && "blur-lg select-none"
+                    )}>
+                        {feedback.notaGeral}
                     </div>
-                </ScrollArea>
-            </DialogContent>
-        </Dialog>
+                    <p className="text-muted-foreground font-semibold">/ 1000</p>
+                </CardContent>
+                <CardFooter className="p-4 bg-muted/50 justify-center">
+                    {!isRevealed && !isZeroGrade ? (
+                        <Button onClick={() => setIsRevealed(true)}>
+                            <Eye className="mr-2" />
+                            Revelar Nota
+                        </Button>
+                    ) : (
+                         <p className="text-sm text-muted-foreground">Continue praticando para alcançar a nota mil!</p>
+                    )}
+                </CardFooter>
+            </Card>
+            
+            <div className="space-y-4">
+                <h3 className="text-xl font-bold font-headline">Análise por Competência</h3>
+                {competencies.map((comp, index) => (
+                    <Card key={index} className="overflow-hidden">
+                        <CardHeader className="bg-muted/30">
+                            <div className="flex items-center justify-between w-full">
+                                <div className="flex items-start gap-3">
+                                    <Info className="w-4 h-4 mt-1 shrink-0 text-muted-foreground" />
+                                    <div className="flex flex-col">
+                                        <CardTitle className="text-base font-semibold">{comp.name}</CardTitle>
+                                        <CardDescription className="text-xs">{comp.description}</CardDescription>
+                                    </div>
+                                </div>
+                                <span className="text-lg ml-4 font-bold">{comp.score} / 200</span>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="p-4 space-y-3">
+                            <Progress value={comp.score / 2} className="h-2" />
+                            <p className="text-sm text-muted-foreground prose prose-sm max-w-none whitespace-pre-wrap leading-relaxed">{comp.feedback}</p>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+        </div>
     )
 }
 
@@ -158,7 +168,6 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
   const [essayTopic, setEssayTopic] = useState("");
   const [feedback, setFeedback] = useState<ProvideAiFeedbackOnEssayOutput | null>(null);
   const [isPending, startTransition] = useTransition();
-  const [isFeedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const { toast } = useToast();
   const [time, setTime] = useState(5400); // 90 minutes in seconds
 
@@ -193,7 +202,6 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
         const result = await provideAiFeedbackOnEssay({ essay: fullEssay });
         if (result) {
           setFeedback(result);
-          setFeedbackModalOpen(true);
         } else {
           toast({
             title: "Erro na Correção",
@@ -247,7 +255,7 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
                     placeholder="Digite o tema da redação"
                     value={essayTopic}
                     onChange={(e) => setEssayTopic(e.target.value)} 
-                    disabled={!!topic && !topic.includes("Não foi possível carregar")}
+                    disabled={isPending || (!!topic && !topic.includes("Não foi possível carregar"))}
                     readOnly={!!topic && !topic.includes("Não foi possível carregar")}
                 />
             </div>
@@ -258,6 +266,7 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
                     placeholder="Digite o título da redação"
                     value={essayTitle}
                     onChange={(e) => setEssayTitle(e.target.value)} 
+                    disabled={isPending}
                 />
             </div>
         </div>
@@ -279,13 +288,22 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
           className="min-h-[50vh] text-base"
           value={essay}
           onChange={(e) => setEssay(e.target.value)}
+          disabled={isPending}
         />
         <Button onClick={getFeedback} disabled={isPending} size="lg" className="w-full sm:w-auto">
           {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
-          Corrigir com IA
+          {isPending ? "Analisando..." : "Corrigir com IA"}
         </Button>
       </div>
-      <FeedbackDialog feedback={feedback} open={isFeedbackModalOpen} onOpenChange={setFeedbackModalOpen} />
+
+      {isPending && (
+          <div className="text-center py-8">
+              <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary mb-4" />
+              <p className="text-muted-foreground">Aguarde, a IA está corrigindo sua redação...</p>
+          </div>
+      )}
+
+      {feedback && !isPending && <FeedbackResult feedback={feedback} />}
     </>
   );
 }
