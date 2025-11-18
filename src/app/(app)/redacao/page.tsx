@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Feather, Gift, Timer, Target } from "lucide-react";
+import { ArrowRight, Feather, Gift, Timer } from "lucide-react";
 import Link from "next/link";
 
 const challenges = [
@@ -24,13 +24,6 @@ const challenges = [
     description: "Prepare-se para o grande dia com um tema e cronômetro, simulando as condições reais da prova.",
     link: "/redacao/enem-cronometrado",
     cta: "Iniciar Simulado",
-  },
-  {
-    icon: Target,
-    title: "Foco na Conclusão (C5)",
-    description: "Receba uma redação incompleta e treine especificamente sua proposta de intervenção.",
-    link: "/redacao/conclusao",
-    cta: "Praticar Conclusão",
   },
 ];
 
