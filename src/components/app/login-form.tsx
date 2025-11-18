@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth, initiateEmailSignIn } from '@/firebase';
 import { useToast } from "@/hooks/use-toast";
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 export function LoginForm() {
   const router = useRouter();
@@ -32,13 +33,25 @@ export function LoginForm() {
     try {
       await initiateEmailSignIn(auth, email, password);
       router.push('/dashboard');
-    } catch (error: any) {
-      console.error(error);
-      toast({
-        title: "Erro de Autenticação",
-        description: error.message || "Ocorreu um erro. Verifique suas credenciais e tente novamente.",
-        variant: "destructive",
-      });
+    } catch (signInError: any) {
+      if (signInError.code === 'auth/invalid-credential' || signInError.code === 'auth/user-not-found') {
+        try {
+          await createUserWithEmailAndPassword(auth, email, password);
+          router.push('/dashboard');
+        } catch (signUpError: any) {
+          toast({
+            title: "Erro ao Criar Conta",
+            description: signUpError.message || "Não foi possível criar sua conta. Verifique os dados e tente novamente.",
+            variant: "destructive",
+          });
+        }
+      } else {
+        toast({
+          title: "Erro de Autenticação",
+          description: signInError.message || "Ocorreu um erro. Verifique suas credenciais e tente novamente.",
+          variant: "destructive",
+        });
+      }
     }
   };
 
