@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { ArrowRight, BookOpen, FileText } from "lucide-react";
+import { ArrowRight, BookOpen, Lightbulb } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -115,25 +115,20 @@ export default function DashboardPage() {
         <Card className="flex flex-col">
           <CardHeader>
               <CardTitle className="font-headline flex items-center gap-2">
-                <FileText />
-                Minhas Redações
+                <Lightbulb />
+                Motivação do Dia
               </CardTitle>
-              <CardDescription>Acompanhe seu progresso e continue praticando.</CardDescription>
           </CardHeader>
-          <CardContent className="flex-grow flex flex-col justify-center items-center text-center space-y-4">
-              <div>
-                  <p className="text-sm text-muted-foreground">Última nota</p>
-                  <p className="text-4xl font-bold text-primary">920</p>
-              </div>
-              <div>
-                  <p className="text-sm text-muted-foreground">Total de redações</p>
-                  <p className="text-2xl font-bold">5</p>
-              </div>
+          <CardContent className="flex-grow flex flex-col justify-center items-center text-center">
+            <blockquote className="space-y-2">
+                <p className="text-lg font-medium">&ldquo;O sucesso é a soma de pequenos esforços repetidos dia após dia.&rdquo;</p>
+                <footer className="text-sm text-muted-foreground">- Robert Collier</footer>
+            </blockquote>
           </CardContent>
           <CardFooter>
             <Link href="/redacao" passHref className="w-full">
-              <Button className="w-full">
-                Praticar Agora
+              <Button variant="ghost" className="w-full">
+                Começar a praticar
                 <ArrowRight className="ml-2"/>
               </Button>
             </Link>
