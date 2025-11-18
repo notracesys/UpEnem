@@ -1,3 +1,4 @@
+
 "use client"
 
 import Link from "next/link"
@@ -39,7 +40,7 @@ export function AppHeader() {
       <div className="flex items-center gap-2 sm:hidden">
         <Link href="/dashboard" className="flex items-center gap-2">
           <TrendingUp className="w-6 h-6 text-primary" />
-          <span className="text-lg font-bold font-headline">UpEnem</span>
+          <span className="text-lg font-bold font-headline text-foreground">UpEnem</span>
         </Link>
       </div>
 
