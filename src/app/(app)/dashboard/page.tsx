@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { AlertCircle, BookOpen } from "lucide-react";
@@ -45,7 +46,12 @@ const subjectColors: { [key: string]: string } = {
     'Revisão': 'bg-gray-100 text-gray-800 border-gray-200',
 }
 
-function getTodaySChedule() {
+type TodaySchedule = {
+  day: string;
+  tasks: { subject: string; topic: string }[];
+};
+
+function getTodaySChedule(): TodaySchedule {
     const today = new Date().toLocaleDateString('pt-BR', { weekday: 'long' });
     const todayTitleCased = today.charAt(0).toUpperCase() + today.slice(1);
     const dayKey = Object.keys(schedule).find(day => day.startsWith(todayTitleCased)) as keyof typeof schedule | undefined;
@@ -58,7 +64,26 @@ function getTodaySChedule() {
 
 
 export default function DashboardPage() {
-  const { day, tasks } = getTodaySChedule();
+  const [todaySchedule, setTodaySchedule] = useState<TodaySchedule | null>(null);
+
+  useEffect(() => {
+    setTodaySchedule(getTodaySChedule());
+  }, []);
+
+  if (!todaySchedule) {
+    // You can return a loading spinner or a skeleton loader here
+    return (
+      <div className="space-y-8">
+        <header>
+          <h1 className="text-3xl font-bold font-headline">Visão Geral do Dia</h1>
+          <p className="text-muted-foreground">Seu resumo diário, progresso e próximos passos.</p>
+        </header>
+        <p>Carregando...</p>
+      </div>
+    );
+  }
+
+  const { day, tasks } = todaySchedule;
 
   return (
     <div className="space-y-8">
