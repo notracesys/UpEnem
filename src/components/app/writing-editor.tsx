@@ -11,6 +11,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Lightbulb, Loader2, Sparkles, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
 
 type WritingEditorProps = {
   topic?: string;
@@ -101,13 +104,21 @@ function FeedbackDialog({ feedback, open, onOpenChange }: { feedback: ProvideAiF
 
 export function WritingEditor({ topic, initialText, showTimer, title, description }: WritingEditorProps) {
   const [essay, setEssay] = useState("");
+  const [essayTitle, setEssayTitle] = useState("");
+  const [essayTopic, setEssayTopic] = useState("");
   const [feedback, setFeedback] = useState<ProvideAiFeedbackOnEssayOutput | null>(null);
   const [isPending, startTransition] = useTransition();
   const [isFeedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const { toast } = useToast();
 
+  useEffect(() => {
+    if (topic) {
+        setEssayTopic(topic);
+    }
+  }, [topic]);
+
   const getFeedback = async () => {
-    if (!essay.trim()) {
+    if (!essay.trim() && !initialText) {
       toast({
         title: "Texto Vazio",
         description: "Por favor, escreva algo antes de pedir a correção.",
@@ -115,9 +126,19 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
       });
       return;
     }
+    if (!essayTopic.trim()) {
+        toast({
+            title: "Tema Vazio",
+            description: "Por favor, defina um tema para a sua redação.",
+            variant: "destructive",
+        });
+        return;
+    }
     startTransition(async () => {
       setFeedback(null);
-      const result = await provideAiFeedbackOnEssay({ essay });
+      const fullEssayText = initialText ? `${initialText}\n\n${essay}` : essay;
+      const fullEssay = `Tema: ${essayTopic}\nTítulo: ${essayTitle || 'Sem Título'}\n\n${fullEssayText}`;
+      const result = await provideAiFeedbackOnEssay({ essay: fullEssay });
       if (result) {
         setFeedback(result);
         setFeedbackModalOpen(true);
@@ -142,7 +163,7 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
             {showTimer && <Timer />}
         </header>
 
-        {topic && (
+        {topic && !initialText && (
           <Alert>
             <Lightbulb className="h-4 w-4" />
             <AlertTitle>Tema Proposto</AlertTitle>
@@ -150,6 +171,29 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
           </Alert>
         )}
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+                <Label htmlFor="essay-topic">Tema</Label>
+                <Input 
+                    id="essay-topic"
+                    placeholder="Digite o tema da redação"
+                    value={essayTopic}
+                    onChange={(e) => setEssayTopic(e.target.value)} 
+                    disabled={!!topic}
+                    readOnly={!!topic}
+                />
+            </div>
+            <div className="space-y-2">
+                <Label htmlFor="essay-title">Título (Opcional)</Label>
+                <Input 
+                    id="essay-title"
+                    placeholder="Digite o título da redação"
+                    value={essayTitle}
+                    onChange={(e) => setEssayTitle(e.target.value)} 
+                />
+            </div>
+        </div>
+        
         {initialText && (
             <Card className="bg-muted/50">
                 <CardHeader>
@@ -164,9 +208,16 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
 
         <Textarea
           placeholder="Comece a escrever sua redação aqui..."
-          className="min-h-[60vh] text-base"
-          value={essay}
-          onChange={(e) => setEssay(e.target.value)}
+          className="min-h-[50vh] text-base"
+          defaultValue={initialText ? `${initialText}\n\n` : ''}
+          onChange={(e) => {
+            if(initialText) {
+                const newText = e.target.value.replace(initialText + '\n\n', '');
+                setEssay(newText);
+            } else {
+                setEssay(e.target.value);
+            }
+          }}
         />
         <Button onClick={getFeedback} disabled={isPending} size="lg" className="w-full sm:w-auto">
           {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}

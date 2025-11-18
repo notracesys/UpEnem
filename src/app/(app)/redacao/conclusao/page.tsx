@@ -4,7 +4,9 @@ const incompleteEssay = `A persistência da violência contra a mulher na socied
 
 Nesse contexto, a análise dos fatores que perpetuam essa violência é crucial. A normalização de condutas machistas, a dependência econômica e emocional de muitas mulheres em relação aos seus agressores e a morosidade do sistema judiciário criam um ciclo vicioso de difícil rompimento. A educação, por sua vez, emerge como uma ferramenta poderosa, mas seus efeitos na formação de uma mentalidade de respeito e igualdade de gênero são de longo prazo, exigindo ações imediatas que complementem essa frente.
 
-Diante do exposto, a necessidade de medidas concretas para aprimorar a proposta de intervenção se torna evidente...`;
+Diante do exposto, a necessidade de medidas concretas para aprimorar a proposta de intervenção se torna evidente.`;
+
+const essayTopic = "A persistência da violência contra a mulher na sociedade brasileira";
 
 export default function ConclusionPage() {
   return (
@@ -12,6 +14,7 @@ export default function ConclusionPage() {
         title="Foco na Conclusão (C5)"
         description="Aprimore sua proposta de intervenção. A partir do texto apresentado, elabore uma conclusão nota máxima."
         initialText={incompleteEssay}
+        topic={essayTopic}
     />
   );
 }
