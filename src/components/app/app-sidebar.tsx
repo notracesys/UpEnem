@@ -53,7 +53,7 @@ export function AppSidebar() {
         <div className="flex items-center gap-2 p-2">
           <PenSquare className="w-8 h-8 text-primary" />
           <h1 className="text-2xl font-bold font-headline text-sidebar-foreground">
-            Ocorretor.ia
+            UpEnem
           </h1>
         </div>
       </SidebarHeader>

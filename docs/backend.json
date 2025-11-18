@@ -4,7 +4,7 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "User",
       "type": "object",
-      "description": "Represents a user of the Ocorretor.ai platform.",
+      "description": "Represents a user of the UpEnem platform.",
       "properties": {
         "id": {
           "type": "string",
@@ -52,6 +52,6 @@
         }
       }
     ],
-    "reasoning": "The Firestore structure is designed to support user authentication and content management for the Ocorretor.ai application. It prioritizes authorization independence by using path-based ownership for user data. All documents in a collection share the same security requirements. The structure supports list operations securely (QAPs) via segregation. User data is stored under `/users/{userId}` to clearly establish ownership. This design eliminates the need for `get()` calls in security rules and enables atomic operations, enhancing security and debuggability."
+    "reasoning": "The Firestore structure is designed to support user authentication and content management for the UpEnem application. It prioritizes authorization independence by using path-based ownership for user data. All documents in a collection share the same security requirements. The structure supports list operations securely (QAPs) via segregation. User data is stored under `/users/{userId}` to clearly establish ownership. This design eliminates the need for `get()` calls in security rules and enables atomic operations, enhancing security and debuggability."
   }
 }

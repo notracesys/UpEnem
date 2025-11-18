@@ -39,7 +39,7 @@ export function AppHeader() {
       <div className="flex items-center gap-2 sm:hidden">
         <Link href="/dashboard" className="flex items-center gap-2">
           <PenSquare className="w-6 h-6 text-primary" />
-          <span className="text-lg font-bold font-headline">Ocorretor.ia</span>
+          <span className="text-lg font-bold font-headline">UpEnem</span>
         </Link>
       </div>
 

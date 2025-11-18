@@ -4,8 +4,8 @@ import './globals.css';
 import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
-  title: 'Ocorretor.ia',
-  description: 'Sua jornada para a redação nota mil começa aqui.',
+  title: 'UpEnem',
+  description: 'Sua plataforma completa para o ENEM.',
 };
 
 export default function RootLayout({
