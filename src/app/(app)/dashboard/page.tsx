@@ -1,70 +1,141 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Feather, Gift, Timer, Target } from "lucide-react";
-import Link from "next/link";
+"use client"
 
-const challenges = [
-  {
-    icon: Feather,
-    title: "Prática Livre",
-    description: "Escreva sobre qualquer tema, sem amarras. Ideal para aquecer e organizar as ideias.",
-    link: "/redacao",
-    cta: "Começar a Escrever",
-  },
-  {
-    icon: Gift,
-    title: "Tema Surpresa",
-    description: "Desafie sua criatividade com um tema aleatório gerado pela nossa IA.",
-    link: "/redacao/tema-surpresa",
-    cta: "Gerar Tema",
-  },
-  {
-    icon: Timer,
-    title: "Simulação ENEM",
-    description: "Prepare-se para o grande dia com um tema e cronômetro, simulando as condições reais da prova.",
-    link: "/redacao/enem-cronometrado",
-    cta: "Iniciar Simulado",
-  },
-  {
-    icon: Target,
-    title: "Foco na Conclusão (C5)",
-    description: "Receba uma redação incompleta e treine especificamente sua proposta de intervenção.",
-    link: "/redacao/conclusao",
-    cta: "Praticar Conclusão",
-  },
-];
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { AlertCircle, BookOpen } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+
+const schedule = {
+  "Segunda-feira": [
+    { subject: "Matemática", topic: "Álgebra e Funções" },
+    { subject: "Linguagens", topic: "Interpretação de Texto" },
+  ],
+  "Terça-feira": [
+    { subject: "Humanas", topic: "História do Brasil" },
+    { subject: "Natureza", topic: "Biologia Celular" },
+  ],
+  "Quarta-feira": [
+    { subject: "Redação", topic: "Prática de Argumentação" },
+    { subject: "Matemática", topic: "Geometria Plana" },
+  ],
+  "Quinta-feira": [
+    { subject: "Linguagens", topic: "Figuras de Linguagem" },
+    { subject: "Humanas", topic: "Geografia Urbana" },
+  ],
+  "Sexta-feira": [
+    { subject: "Natureza", topic: "Química Orgânica" },
+    { subject: "Revisão", topic: "Revisar tópicos da semana" },
+  ],
+  "Sábado": [],
+  "Domingo": [],
+};
+
+const chartData = Object.entries(schedule).map(([day, tasks]) => ({
+  name: day.substring(0, 3),
+  Tópicos: tasks.length,
+}));
+
+const subjectColors: { [key: string]: string } = {
+    'Matemática': 'bg-blue-100 text-blue-800 border-blue-200',
+    'Linguagens': 'bg-green-100 text-green-800 border-green-200',
+    'Humanas': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+    'Natureza': 'bg-purple-100 text-purple-800 border-purple-200',
+    'Redação': 'bg-red-100 text-red-800 border-red-200',
+    'Revisão': 'bg-gray-100 text-gray-800 border-gray-200',
+}
+
+function getTodaySChedule() {
+    const today = new Date().toLocaleDateString('pt-BR', { weekday: 'long' });
+    const todayTitleCased = today.charAt(0).toUpperCase() + today.slice(1);
+    const dayKey = Object.keys(schedule).find(day => day.startsWith(todayTitleCased)) as keyof typeof schedule | undefined;
+    
+    if (dayKey) {
+        return { day: dayKey, tasks: schedule[dayKey] };
+    }
+    return { day: todayTitleCased, tasks: [] };
+}
+
 
 export default function DashboardPage() {
+  const { day, tasks } = getTodaySChedule();
+
   return (
     <div className="space-y-8">
       <header>
-        <h1 className="text-3xl font-bold font-headline">Desafios e Prática</h1>
-        <p className="text-muted-foreground">Escolha um modo de prática e aprimore sua escrita com a ajuda da IA.</p>
+        <h1 className="text-3xl font-bold font-headline">Visão Geral do Dia</h1>
+        <p className="text-muted-foreground">Seu resumo diário, progresso e próximos passos.</p>
       </header>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {challenges.map((challenge) => (
-          <Card key={challenge.title} className="flex flex-col">
-            <CardHeader className="flex flex-row items-start gap-4">
-              <div className="bg-primary/10 text-primary p-3 rounded-lg">
-                <challenge.icon className="w-6 h-6" />
-              </div>
-              <div>
-                <CardTitle className="font-headline">{challenge.title}</CardTitle>
-                <CardDescription>{challenge.description}</CardDescription>
-              </div>
+      <div className="grid gap-6 md:grid-cols-3">
+        <Card className="md:col-span-2">
+            <CardHeader>
+                <CardTitle>Plano de Estudos Semanal</CardTitle>
+                <CardDescription>Distribuição de tópicos de estudo ao longo da semana.</CardDescription>
             </CardHeader>
-            <CardContent className="mt-auto">
-              <Link href={challenge.link} passHref>
-                <Button className="w-full">
-                  {challenge.cta}
-                  <ArrowRight className="ml-2" />
-                </Button>
-              </Link>
+            <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={chartData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis allowDecimals={false} />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="Tópicos" fill="hsl(var(--primary))" />
+                    </BarChart>
+                </ResponsiveContainer>
             </CardContent>
-          </Card>
-        ))}
+        </Card>
+        
+        <Card className="flex flex-col">
+            <CardHeader>
+                <CardTitle className="font-headline">Avisos Importantes</CardTitle>
+            </CardHeader>
+            <CardContent className="flex-grow space-y-4">
+                <div className="flex items-start gap-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <AlertCircle className="w-5 h-5 text-yellow-600 mt-1 shrink-0"/>
+                    <div>
+                        <p className="font-semibold text-yellow-800">Simulado Nacional</p>
+                        <p className="text-sm text-yellow-700">O próximo simulado nacional acontecerá em duas semanas. Não se esqueça de se inscrever!</p>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
       </div>
+
+       <Card>
+        <CardHeader>
+          <CardTitle className="font-headline">Estudos de Hoje: {day}</CardTitle>
+          <CardDescription>Foco e determinação! Aqui estão os tópicos para você brilhar hoje.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {tasks.length > 0 ? (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {tasks.map((task, index) => (
+                <div key={index} className={`p-4 rounded-lg border ${subjectColors[task.subject] || 'bg-gray-100'}`}>
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 bg-white rounded-full">
+                            <BookOpen className="w-5 h-5"/>
+                        </div>
+                        <div>
+                            <p className="font-bold">{task.subject}</p>
+                            <p className="text-sm">{task.topic}</p>
+                        </div>
+                    </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">Você não tem estudos programados para hoje. Aproveite para descansar ou revisar!</p>
+               <Link href="/cronograma" passHref>
+                <Button variant="outline" className="mt-4">Ver Cronograma Completo</Button>
+              </Link>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
     </div>
   );
 }
