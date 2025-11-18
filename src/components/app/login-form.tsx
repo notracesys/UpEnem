@@ -7,20 +7,14 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useAuth, initiateEmailSignIn, initiateEmailSignUp, setDocumentNonBlocking } from '@/firebase';
-import { doc } from 'firebase/firestore';
-import { useFirestore } from '@/firebase';
+import { useAuth, initiateEmailSignIn } from '@/firebase';
 import { useToast } from "@/hooks/use-toast";
-
-type FormVariant = 'login' | 'signup';
 
 export function LoginForm() {
   const router = useRouter();
   const auth = useAuth();
-  const firestore = useFirestore();
   const { toast } = useToast();
   
-  const [variant, setVariant] = useState<FormVariant>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [agreed, setAgreed] = useState(false);
@@ -36,20 +30,7 @@ export function LoginForm() {
     }
 
     try {
-      if (variant === 'login') {
-        await initiateEmailSignIn(auth, email, password);
-      } else {
-        const userCredential = await initiateEmailSignUp(auth, email, password);
-        if (userCredential && userCredential.user) {
-          const user = userCredential.user;
-          const userRef = doc(firestore, 'users', user.uid);
-          setDocumentNonBlocking(userRef, {
-            id: user.uid,
-            email: user.email,
-            termsAccepted: true
-          }, { merge: true });
-        }
-      }
+      await initiateEmailSignIn(auth, email, password);
       router.push('/dashboard');
     } catch (error: any) {
       console.error(error);
@@ -61,18 +42,14 @@ export function LoginForm() {
     }
   };
 
-  const toggleVariant = () => {
-    setVariant(prev => (prev === 'login' ? 'signup' : 'login'));
-  }
-
   return (
     <Card className="w-full max-w-md shadow-2xl">
       <CardHeader>
         <CardTitle className="text-3xl font-headline">
-          {variant === 'login' ? 'Acesse sua conta' : 'Crie sua conta'}
+          Acesse sua conta
         </CardTitle>
         <CardDescription>
-          {variant === 'login' ? 'Insira seus dados para entrar na plataforma.' : 'Preencha seus dados para se cadastrar.'}
+          Insira seu e-mail e senha para entrar na plataforma.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -101,10 +78,7 @@ export function LoginForm() {
           onClick={handleAuthAction} 
           disabled={!agreed || !email || !password}
         >
-          {variant === 'login' ? 'ACESSAR MINHA CONTA' : 'CADASTRAR'}
-        </Button>
-        <Button variant="link" onClick={toggleVariant}>
-          {variant === 'login' ? 'Não tem uma conta? Cadastre-se' : 'Já tem uma conta? Faça login'}
+          ACESSAR MINHA CONTA
         </Button>
       </CardFooter>
     </Card>
