@@ -10,7 +10,6 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth, initiateEmailSignIn } from '@/firebase';
 import { useToast } from "@/hooks/use-toast";
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Loader2 } from 'lucide-react';
@@ -140,28 +139,20 @@ export function LoginForm() {
       await initiateEmailSignIn(auth, email, password);
       setLoadingMessage("Login concluído, aguarde...");
       router.push('/dashboard');
-    } catch (signInError: any) {
-      if (signInError.code === 'auth/invalid-credential' || signInError.code === 'auth/user-not-found') {
-        try {
-          await createUserWithEmailAndPassword(auth, email, password);
-          setLoadingMessage("Conta criada! Aguarde...");
-          router.push('/dashboard');
-        } catch (signUpError: any) {
-          toast({
-            title: "Erro ao Criar Conta",
-            description: signUpError.message || "Não foi possível criar sua conta. Verifique os dados e tente novamente.",
-            variant: "destructive",
-          });
-          setIsLoading(false);
+    } catch (error: any) {
+        let description = "Ocorreu um erro. Verifique suas credenciais e tente novamente.";
+        if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
+            description = "Credenciais inválidas. Verifique seu e-mail e senha.";
+        } else if (error.message) {
+            description = error.message;
         }
-      } else {
+
         toast({
-          title: "Erro de Autenticação",
-          description: signInError.message || "Ocorreu um erro. Verifique suas credenciais e tente novamente.",
-          variant: "destructive",
+            title: "Erro de Autenticação",
+            description: description,
+            variant: "destructive",
         });
         setIsLoading(false);
-      }
     }
   };
 
