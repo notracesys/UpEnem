@@ -22,6 +22,7 @@ import {
   Settings,
   LogOut,
   TrendingUp,
+  FileQuestion,
 } from "lucide-react"
 import { useAuth } from "@/firebase"
 
@@ -29,7 +30,7 @@ const menuItems = [
   { href: "/dashboard", label: "Início", icon: Home },
   { href: "/redacao", label: "Redação", icon: FileText },
   { href: "/materiais", label: "Materiais de Estudo", icon: BookOpen },
-  { href: "/simulados", label: "Simulados", icon: ClipboardList },
+  { href: "/pratica-de-questoes", label: "Prática de Questões", icon: FileQuestion },
   { href: "/cronograma", label: "Cronograma", icon: Calendar },
   { href: "/suporte", label: "Suporte e Dúvidas", icon: HelpCircle },
 ]

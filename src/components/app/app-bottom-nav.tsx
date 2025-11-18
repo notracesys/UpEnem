@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, FileText, BookOpen, ClipboardList, Calendar } from "lucide-react";
+import { Home, FileText, BookOpen, FileQuestion, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -11,7 +11,7 @@ const menuItems = [
   { href: "/dashboard", label: "Início", icon: Home },
   { href: "/redacao", label: "Redação", icon: FileText },
   { href: "/materiais", label: "Materiais", icon: BookOpen },
-  { href: "/simulados", label: "Simulados", icon: ClipboardList },
+  { href: "/pratica-de-questoes", label: "Questões", icon: FileQuestion },
   { href: "/cronograma", label: "Cronograma", icon: Calendar },
 ];
 

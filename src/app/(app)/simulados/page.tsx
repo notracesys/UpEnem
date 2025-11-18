@@ -1,3 +1,4 @@
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ClipboardCheck, FileQuestion, History } from "lucide-react";
@@ -5,8 +6,8 @@ import { ClipboardCheck, FileQuestion, History } from "lucide-react";
 const simulations = [
   {
     icon: ClipboardCheck,
-    title: "Simulados Completos",
-    description: "Teste seus conhecimentos em todas as áreas com simulados no modelo do ENEM.",
+    title: "Testes Completos",
+    description: "Teste seus conhecimentos em todas as áreas com testes no modelo do ENEM.",
   },
   {
     icon: FileQuestion,
@@ -20,12 +21,12 @@ const simulations = [
   },
 ];
 
-export default function SimulationsPage() {
+export default function PracticeQuestionsPage() {
   return (
     <div className="space-y-8">
       <header>
-        <h1 className="text-3xl font-bold font-headline">Simulados</h1>
-        <p className="text-muted-foreground">Prepare-se para o dia da prova com nossos simulados e testes.</p>
+        <h1 className="text-3xl font-bold font-headline">Prática de Questões</h1>
+        <p className="text-muted-foreground">Prepare-se para o dia da prova com nossos testes e questões.</p>
       </header>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -43,7 +44,7 @@ export default function SimulationsPage() {
               <CardDescription>{sim.description}</CardDescription>
             </CardContent>
             <CardFooter>
-              <Button className="w-full">Iniciar Simulado</Button>
+              <Button className="w-full">Iniciar</Button>
             </CardFooter>
           </Card>
         ))}
