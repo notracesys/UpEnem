@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FileText, Landmark, FlaskConical, Sigma } from "lucide-react";
+import { FileText, Landmark, FlaskConical, Sigma, Feather } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -10,6 +10,7 @@ const categories: { id: string; name: string; icon: LucideIcon; link: string; }[
   { id: "humanas", name: "Ciências Humanas", icon: Landmark, link: "#" },
   { id: "natureza", name: "Ciências da Natureza", icon: FlaskConical, link: "#" },
   { id: "matematica", name: "Matemática", icon: Sigma, link: "#" },
+  { id: "redacao", name: "Redação", icon: Feather, link: "#" },
 ];
 
 const materialTypes = ["Apostilas PDF"];
@@ -22,7 +23,7 @@ export default function StudyMaterialsPage() {
         <p className="text-muted-foreground">Acesse apostilas e materiais de estudo para aprofundar seus conhecimentos.</p>
       </header>
 
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-5">
         {categories.map(category => {
           const Icon = category.icon;
           return (
