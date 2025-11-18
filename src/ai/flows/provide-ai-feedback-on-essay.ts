@@ -23,11 +23,11 @@ const CompetencySchema = z.object({
 const ProvideAiFeedbackOnEssayOutputSchema = z.object({
     notaGeral: z.number().describe('The overall score for the essay, from 0 to 1000. It is the sum of all competency scores.'),
     fugaAoTema: z.boolean().describe('Indicates if the essay is completely off-topic.'),
-    competencia1: CompetencySchema,
-    competencia2: CompetencySchema,
-    competencia3: CompetencySchema,
-    competencia4: CompetencySchema,
-    competencia5: CompetencySchema,
+    competencia1: CompetencySchema.describe('Demonstrates mastery of the formal written modality of the Portuguese Language.'),
+    competencia2: CompetencySchema.describe('Understands the writing proposal and applies concepts from various areas of knowledge to develop the theme, within the structural limits of the argumentative-dissertative text in prose.'),
+    competencia3: CompetencySchema.describe('Selects, relates, organizes, and interprets information, facts, opinions, and arguments in defense of a point of view.'),
+    competencia4: CompetencySchema.describe('Demonstrates knowledge of the linguistic mechanisms necessary for the construction of argumentation.'),
+    competencia5: CompetencySchema.describe('Elaborates an intervention proposal for the addressed problem, respecting human rights.'),
 });
 
 export type ProvideAiFeedbackOnEssayOutput = z.infer<typeof ProvideAiFeedbackOnEssayOutputSchema>;
@@ -53,23 +53,23 @@ Se o texto NÃO fugir ao tema, prossiga com a avaliação padrão e rigorosa aba
 
 **Competências e Critérios de Avaliação (Seja Rigoroso):**
 
-*   **Competência 1 (0-200 pontos):** Demonstrar domínio da modalidade escrita formal da Língua Portuguesa.
-    *   **Critérios:** Avalie desvios gramaticais, de convenções da escrita (ortografia, acentuação, pontuação, hifenização, uso de maiúsculas/minúsculas) e de escolha lexical e sintática. Seja rigoroso: a reincidência de erros deve levar a uma pontuação menor. Dois desvios gramaticais ou três de convenções já impedem a nota máxima.
+*   **Competência 1 (0-200 pontos): Demonstrar domínio da modalidade escrita formal da Língua Portuguesa.**
+    *   **Critérios:** Avalie desvios gramaticais, de convenções da escrita (ortografia, acentuação, pontuação, hifenização, uso de maiúsculas/minúsculas) e de escolha lexical e sintática. Seja rigoroso: a reincidência de erros deve levar a uma pontuação menor. Apenas um desvio gramatical e dois de convenção são aceitos para a nota 200. Mais que isso, a nota deve diminuir.
     *   **Penalize:** Erros de concordância, regência, crase, pontuação, ortografia, etc.
 
-*   **Competência 2 (0-200 pontos):** Compreender a proposta de redação e aplicar conceitos das várias áreas de conhecimento para desenvolver o tema, dentro dos limites estruturais do texto dissertativo-argumentativo em prosa.
+*   **Competência 2 (0-200 pontos): Compreender a proposta de redação e aplicar conceitos das várias áreas de conhecimento para desenvolver o tema, dentro dos limites estruturais do texto dissertativo-argumentativo em prosa.**
     *   **Critérios:** Verifique se o texto atende ao tema proposto, se a estrutura (introdução, desenvolvimento, conclusão) está correta e se o repertório sociocultural é pertinente, produtivo e legitimado.
     *   **Penalize:** Tangenciamento do tema, não atendimento à estrutura dissertativo-argumentativa, repertório inadequado, impreciso ou apenas expositivo. (Lembre-se: fuga total zera a redação inteira, como instruído acima).
 
-*   **Competência 3 (0-200 pontos):** Selecionar, relacionar, organizar e interpretar informações, fatos, opiniões e argumentos em defesa de um ponto de vista.
+*   **Competência 3 (0-200 pontos): Selecionar, relacionar, organizar e interpretar informações, fatos, opiniões e argumentos em defesa de um ponto de vista.**
     *   **Critérios:** Analise a coerência do texto. O projeto de texto deve ser claro, e os argumentos, bem desenvolvidos e conectados, defendendo uma tese explícita.
     *   **Penalize:** Argumentos contraditórios, mal desenvolvidos, com pouca ou nenhuma fundamentação, ou que não se conectam de forma lógica.
 
-*   **Competência 4 (0-200 pontos):** Demonstrar conhecimento dos mecanismos linguísticos necessários para a construção da argumentação.
+*   **Competência 4 (0-200 pontos): Demonstrar conhecimento dos mecanismos linguísticos necessários para a construção da argumentação.**
     *   **Critérios:** Avalie o uso de elementos coesivos (conjunções, preposições, pronomes, etc.) para ligar parágrafos, períodos e ideias. A repetição excessiva de conectivos ou a ausência deles deve ser penalizada.
     *   **Penalize:** Parágrafos que não se conectam, ideias soltas, repetição ou uso inadequado de conectivos.
 
-*   **Competência 5 (0-200 pontos):** Elaborar proposta de intervenção para o problema abordado, respeitando os direitos humanos.
+*   **Competência 5 (0-200 pontos): Elaborar proposta de intervenção para o problema abordado, respeitando os direitos humanos.**
     *   **Critérios:** A proposta deve ser completa, contendo 5 elementos: Ação, Agente, Modo/Meio, Efeito/Finalidade e Detalhamento de um desses elementos.
     *   **Penalize:** Ausência de um dos 5 elementos, proposta vaga, genérica, que desrespeite os direitos humanos ou que não seja articulada com a discussão feita no texto.
 
