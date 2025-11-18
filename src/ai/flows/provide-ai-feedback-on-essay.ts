@@ -23,6 +23,7 @@ const CompetencySchema = z.object({
 const ProvideAiFeedbackOnEssayOutputSchema = z.object({
     notaGeral: z.number().describe('The overall score for the essay, from 0 to 1000. It is the sum of all competency scores.'),
     fugaAoTema: z.boolean().describe('Indicates if the essay is completely off-topic.'),
+    textoInsuficiente: z.boolean().describe('Indicates if the essay has 7 lines or less.'),
     competencia1: CompetencySchema.describe('Demonstrates mastery of the formal written modality of the Portuguese Language.'),
     competencia2: CompetencySchema.describe('Understands the writing proposal and applies concepts from various areas of knowledge to develop the theme, within the structural limits of the argumentative-dissertative text in prose.'),
     competencia3: CompetencySchema.describe('Selects, relates, organizes, and interprets information, facts, opinions, and arguments in defense of a point of view.'),
@@ -42,14 +43,26 @@ const prompt = ai.definePrompt({
   output: {schema: ProvideAiFeedbackOnEssayOutputSchema},
   prompt: `Você é um corretor profissional e extremamente rigoroso de redações do ENEM. Sua principal função é analisar a redação do aluno com base nas 5 competências oficiais do exame, atribuindo uma pontuação de 0 a 200 para cada uma e, se necessário, aplicando penalidades precisas conforme as regras do ENEM.
 
-**Verificação de Fuga ao Tema:**
-Antes de avaliar as competências, verifique se o texto foge completamente ao tema. Se houver fuga total ao tema, sua resposta DEVE ser a seguinte:
-1.  Atribua o valor \`true\` para o campo \`fugaAoTema\`.
-2.  Atribua 0 (zero) para a pontuação de TODAS as 5 competências.
-3.  O campo \`notaGeral\` deve ser 0 (zero).
-4.  No campo de feedback de cada competência, explique que a nota foi zerada por fuga total ao tema.
+**Critérios de Anulação (Nota Zero):**
+Antes de avaliar as competências, verifique os seguintes critérios de anulação:
 
-Se o texto NÃO fugir ao tema, prossiga com a avaliação padrão e rigorosa abaixo.
+1.  **Fuga Total ao Tema:**
+    *   Se o texto fugir completamente ao tema, sua resposta DEVE ser:
+        *   \`fugaAoTema\`: \`true\`
+        *   \`textoInsuficiente\`: \`false\`
+        *   Pontuação de TODAS as 5 competências: 0 (zero)
+        *   \`notaGeral\`: 0 (zero)
+        *   Feedback de cada competência: "A redação foi zerada por fuga total ao tema."
+
+2.  **Texto Insuficiente (Até 7 linhas):**
+    *   Conte as linhas escritas pelo aluno. Se o texto tiver 7 linhas ou menos, sua resposta DEVE ser:
+        *   \`fugaAoTema\`: \`false\`
+        *   \`textoInsuficiente\`: \`true\`
+        *   Pontuação de TODAS as 5 competências: 0 (zero)
+        *   \`notaGeral\`: 0 (zero)
+        *   Feedback de cada competência: "A redação foi zerada por ser considerada 'Texto Insuficiente' (7 linhas ou menos)."
+
+Se nenhum desses critérios de anulação for atendido, prossiga com a avaliação padrão e rigorosa abaixo.
 
 **Competências e Critérios de Avaliação (Seja Rigoroso):**
 

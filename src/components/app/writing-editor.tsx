@@ -56,6 +56,18 @@ function FeedbackDialog({ feedback, open, onOpenChange }: { feedback: ProvideAiF
         { name: "Competência 5", score: feedback.competencia5.score, feedback: feedback.competencia5.feedback, description: "Elaborar proposta de intervenção respeitando os direitos humanos." },
     ];
 
+    const getZeroGradeReason = () => {
+        if (feedback.fugaAoTema) {
+            return "Fuga Total ao Tema: Sua redação foi zerada por não abordar o tema proposto. Analise a proposta com mais atenção e tente novamente.";
+        }
+        if (feedback.textoInsuficiente) {
+            return "Texto Insuficiente: Sua redação foi zerada por conter 7 linhas ou menos.";
+        }
+        return null;
+    }
+
+    const zeroGradeReason = getZeroGradeReason();
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col p-0">
@@ -69,12 +81,12 @@ function FeedbackDialog({ feedback, open, onOpenChange }: { feedback: ProvideAiF
 
                 <ScrollArea className="flex-grow">
                     <div className="px-6 pb-6 space-y-4">
-                        {feedback.fugaAoTema && (
+                        {zeroGradeReason && (
                             <Alert variant="destructive">
                                 <AlertTriangle className="h-4 w-4" />
-                                <AlertTitle>Fuga Total ao Tema</AlertTitle>
+                                <AlertTitle>Redação Zerada</AlertTitle>
                                 <AlertDescription>
-                                Sua redação foi zerada por fuga total ao tema. Analise a proposta com mais atenção e tente novamente.
+                                {zeroGradeReason}
                                 </AlertDescription>
                             </Alert>
                         )}
