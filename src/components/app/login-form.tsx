@@ -80,7 +80,7 @@ export function LoginForm() {
             htmlFor="terms"
             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
-            Li e aceito os <a href="#" className="underline text-primary">Termos e Condições</a>
+            Li e aceito os Termos e Condições
           </label>
         </div>
       </CardContent>
