@@ -70,7 +70,7 @@ function FeedbackDialog({ feedback, open, onOpenChange }: { feedback: ProvideAiF
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-4xl p-0">
+            <DialogContent className="max-w-4xl p-0 max-h-[90vh] flex flex-col">
                 <DialogHeader className="p-6 pb-4 border-b">
                     <DialogTitle className="flex items-center gap-2 font-headline text-2xl">
                         <Sparkles className="text-primary"/>
@@ -79,7 +79,7 @@ function FeedbackDialog({ feedback, open, onOpenChange }: { feedback: ProvideAiF
                     <DialogDescription>Aqui está a análise completa da sua redação.</DialogDescription>
                 </DialogHeader>
 
-                <ScrollArea className="h-[70vh]">
+                <ScrollArea className="flex-grow min-h-0">
                     <div className="p-6 space-y-6">
                         {zeroGradeReason ? (
                             <Alert variant="destructive">
@@ -159,19 +159,36 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
         return;
     }
     startTransition(async () => {
-      setFeedback(null);
-      const fullEssayText = initialText ? `${initialText}\n\n${essay}` : essay;
-      const fullEssay = `Tema: ${essayTopic}\nTítulo: ${essayTitle || 'Sem Título'}\n\n${fullEssayText}`;
-      const result = await provideAiFeedbackOnEssay({ essay: fullEssay });
-      if (result) {
-        setFeedback(result);
-        setFeedbackModalOpen(true);
-      } else {
-        toast({
-          title: "Erro na Correção",
-          description: "Não foi possível gerar o feedback. Tente novamente.",
-          variant: "destructive",
-        });
+      try {
+        setFeedback(null);
+        const fullEssayText = initialText ? `${initialText}\n\n${essay}` : essay;
+        const fullEssay = `Tema: ${essayTopic}\nTítulo: ${essayTitle || 'Sem Título'}\n\n${fullEssayText}`;
+        const result = await provideAiFeedbackOnEssay({ essay: fullEssay });
+        if (result) {
+          setFeedback(result);
+          setFeedbackModalOpen(true);
+        } else {
+          toast({
+            title: "Erro na Correção",
+            description: "Não foi possível gerar o feedback. Tente novamente.",
+            variant: "destructive",
+          });
+        }
+      } catch (error: any) {
+        console.error(error);
+        if (error.message && error.message.includes('503')) {
+          toast({
+            title: "Serviço Indisponível",
+            description: "A IA está sobrecarregada no momento. Por favor, tente novamente em alguns instantes.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Erro na Correção",
+            description: "Ocorreu um erro inesperado. Tente novamente mais tarde.",
+            variant: "destructive",
+          });
+        }
       }
     });
   };
