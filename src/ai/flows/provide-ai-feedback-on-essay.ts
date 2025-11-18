@@ -22,6 +22,7 @@ const CompetencySchema = z.object({
 
 const ProvideAiFeedbackOnEssayOutputSchema = z.object({
     notaGeral: z.number().describe('The overall score for the essay, from 0 to 1000. It is the sum of all competency scores.'),
+    fugaAoTema: z.boolean().describe('Indicates if the essay is completely off-topic.'),
     competencia1: CompetencySchema,
     competencia2: CompetencySchema,
     competencia3: CompetencySchema,
@@ -43,6 +44,13 @@ const prompt = ai.definePrompt({
 
 A nota geral será a soma das pontuações das 5 competências.
 
+**Verificação de Fuga ao Tema:**
+Antes de avaliar as competências, verifique se o texto foge completamente ao tema. Se houver fuga total ao tema, você deve:
+1.  Atribuir o valor \`true\` para o campo \`fugaAoTema\`.
+2.  Atribuir 0 (zero) para a pontuação da Competência 2 e explicar no feedback que a nota foi zerada por fuga total ao tema.
+3.  As outras competências devem ser avaliadas normalmente, mas a nota geral será impactada drasticamente pela C2 zerada.
+Se o texto não fugir ao tema, atribua \`false\` para \`fugaAoTema\` e prossiga com a avaliação padrão.
+
 **Competências e Critérios de Avaliação (Seja Rigoroso):**
 
 *   **Competência 1 (0-200 pontos):** Demonstrar domínio da modalidade escrita formal da Língua Portuguesa.
@@ -51,7 +59,7 @@ A nota geral será a soma das pontuações das 5 competências.
 
 *   **Competência 2 (0-200 pontos):** Compreender a proposta de redação e aplicar conceitos das várias áreas de conhecimento para desenvolver o tema, dentro dos limites estruturais do texto dissertativo-argumentativo em prosa.
     *   **Critérios:** Verifique se o texto atende ao tema proposto, se a estrutura (introdução, desenvolvimento, conclusão) está correta e se o repertório sociocultural é pertinente, produtivo e legitimado.
-    *   **Penalize:** Fuga total ou tangenciamento do tema, não atendimento à estrutura dissertativo-argumentativa, repertório inadequado, impreciso ou apenas expositivo.
+    *   **Penalize:** Fuga total (resultando em nota zero na competência) ou tangenciamento do tema, não atendimento à estrutura dissertativo-argumentativa, repertório inadequado, impreciso ou apenas expositivo.
 
 *   **Competência 3 (0-200 pontos):** Selecionar, relacionar, organizar e interpretar informações, fatos, opiniões e argumentos em defesa de um ponto de vista.
     *   **Critérios:** Analise a coerência do texto. O projeto de texto deve ser claro, e os argumentos, bem desenvolvidos e conectados, defendendo uma tese explícita.

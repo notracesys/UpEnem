@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Lightbulb, Loader2, Sparkles, Info } from "lucide-react";
+import { Lightbulb, Loader2, Sparkles, Info, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
@@ -65,6 +65,17 @@ function FeedbackDialog({ feedback, open, onOpenChange }: { feedback: ProvideAiF
                     </DialogTitle>
                     <DialogDescription>Aqui está a análise completa da sua redação.</DialogDescription>
                 </DialogHeader>
+                
+                {feedback.fugaAoTema && (
+                    <Alert variant="destructive">
+                        <AlertTriangle className="h-4 w-4" />
+                        <AlertTitle>Fuga Total ao Tema</AlertTitle>
+                        <AlertDescription>
+                           Sua redação foi considerada uma "fuga total ao tema", o que leva à anulação da Competência 2. Revise o tema proposto e tente novamente.
+                        </AlertDescription>
+                    </Alert>
+                )}
+
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-4">
                     <div className="md:col-span-1">
                         <Card className="bg-muted/30 text-center sticky top-20">
