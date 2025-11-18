@@ -11,7 +11,7 @@ const categories: { id: string; name: string; icon: LucideIcon }[] = [
   { id: "matematica", name: "Matemática", icon: Sigma },
 ];
 
-const materialTypes = ["Apostilas PDF", "Destaques de arquivos"];
+const materialTypes = ["Apostilas PDF"];
 
 export default function StudyMaterialsPage() {
   return (
