@@ -79,55 +79,57 @@ function FeedbackDialog({ feedback, open, onOpenChange }: { feedback: ProvideAiF
                     <DialogDescription>Aqui está a análise completa da sua redação.</DialogDescription>
                 </DialogHeader>
 
-                <ScrollArea className="flex-grow">
-                    <div className="px-6 pb-6 space-y-6">
-                        {zeroGradeReason && (
-                            <Alert variant="destructive">
-                                <AlertTriangle className="h-4 w-4" />
-                                <AlertTitle>Redação Zerada</AlertTitle>
-                                <AlertDescription>
-                                {zeroGradeReason}
-                                </AlertDescription>
-                            </Alert>
-                        )}
+                <div className="flex-grow min-h-0">
+                    <ScrollArea className="h-full">
+                        <div className="px-6 pb-6 space-y-6">
+                            {zeroGradeReason && (
+                                <Alert variant="destructive">
+                                    <AlertTriangle className="h-4 w-4" />
+                                    <AlertTitle>Redação Zerada</AlertTitle>
+                                    <AlertDescription>
+                                    {zeroGradeReason}
+                                    </AlertDescription>
+                                </Alert>
+                            )}
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div className="md:col-span-1">
-                                <Card className="bg-muted/30 text-center sticky top-0">
-                                    <CardHeader>
-                                        <CardDescription className="uppercase font-semibold tracking-wider">Nota Geral</CardDescription>
-                                        <CardTitle className="text-6xl font-bold text-primary">{feedback.notaGeral}</CardTitle>
-                                        <p className="text-muted-foreground">/ 1000</p>
-                                    </CardHeader>
-                                </Card>
-                            </div>
-                            <div className="md:col-span-2 space-y-2">
-                                <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
-                                    {competencies.map((comp, index) => (
-                                        <AccordionItem value={`item-${index}`} key={index}>
-                                            <AccordionTrigger className="font-semibold text-left hover:no-underline">
-                                                <div className="flex items-center justify-between w-full">
-                                                    <div className="flex items-start gap-3">
-                                                        <Info className="w-4 h-4 mt-1 shrink-0" />
-                                                        <div className="flex flex-col">
-                                                            <span>{comp.name}</span>
-                                                            <span className="text-xs font-normal text-muted-foreground">{comp.description}</span>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="md:col-span-1">
+                                    <Card className="bg-muted/30 text-center sticky top-0">
+                                        <CardHeader>
+                                            <CardDescription className="uppercase font-semibold tracking-wider">Nota Geral</CardDescription>
+                                            <CardTitle className="text-6xl font-bold text-primary">{feedback.notaGeral}</CardTitle>
+                                            <p className="text-muted-foreground">/ 1000</p>
+                                        </CardHeader>
+                                    </Card>
+                                </div>
+                                <div className="md:col-span-2 space-y-2">
+                                    <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
+                                        {competencies.map((comp, index) => (
+                                            <AccordionItem value={`item-${index}`} key={index}>
+                                                <AccordionTrigger className="font-semibold text-left hover:no-underline">
+                                                    <div className="flex items-center justify-between w-full">
+                                                        <div className="flex items-start gap-3">
+                                                            <Info className="w-4 h-4 mt-1 shrink-0" />
+                                                            <div className="flex flex-col">
+                                                                <span>{comp.name}</span>
+                                                                <span className="text-xs font-normal text-muted-foreground">{comp.description}</span>
+                                                            </div>
                                                         </div>
+                                                        <span className="text-lg ml-4 font-bold">{comp.score} / 200</span>
                                                     </div>
-                                                    <span className="text-lg ml-4 font-bold">{comp.score} / 200</span>
-                                                </div>
-                                            </AccordionTrigger>
-                                            <AccordionContent className="space-y-3 pt-2">
-                                                <Progress value={comp.score / 2} className="h-2" />
-                                                <p className="text-sm text-muted-foreground prose prose-sm max-w-none whitespace-pre-wrap leading-relaxed">{comp.feedback}</p>
-                                            </AccordionContent>
-                                        </AccordionItem>
-                                    ))}
-                                </Accordion>
+                                                </AccordionTrigger>
+                                                <AccordionContent className="space-y-3 pt-2">
+                                                    <Progress value={comp.score / 2} className="h-2" />
+                                                    <p className="text-sm text-muted-foreground prose prose-sm max-w-none whitespace-pre-wrap leading-relaxed">{comp.feedback}</p>
+                                                </AccordionContent>
+                                            </AccordionItem>
+                                        ))}
+                                    </Accordion>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </ScrollArea>
+                    </ScrollArea>
+                </div>
             </DialogContent>
         </Dialog>
     )
