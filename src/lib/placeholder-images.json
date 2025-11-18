@@ -1,3 +1,28 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "linguagens",
+      "description": "Livros em uma prateleira, representando a área de Linguagens.",
+      "imageUrl": "https://images.unsplash.com/photo-1614849963640-9cc74b2a826f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxib29rcyUyMGxpYnJhcnl8ZW58MHx8fHwxNzYzMzQzNDU0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "books library"
+    },
+    {
+      "id": "humanas",
+      "description": "Estátuas em um museu, representando a área de Humanas.",
+      "imageUrl": "https://images.unsplash.com/photo-1659331090686-337aa413e252?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxoaXN0b3J5JTIwbXVzZXVtfGVufDB8fHx8MTc2MzQyNjUzOHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "history museum"
+    },
+    {
+      "id": "natureza",
+      "description": "Equipamento de laboratório, representando a área de Ciências da Natureza.",
+      "imageUrl": "https://images.unsplash.com/photo-1562411053-1d8bdfe771c1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxzY2llbmNlJTIwbGFib3JhdG9yeXxlbnwwfHx8fDE3NjMzOTUyMzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "science laboratory"
+    },
+    {
+      "id": "matematica",
+      "description": "Fórmulas matemáticas em um quadro-negro, representando a área de Matemática.",
+      "imageUrl": "https://images.unsplash.com/photo-1758685733737-71f8945decf1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxibGFja2JvYXJkJTIwZXF1YXRpb25zfGVufDB8fHx8MTc2MzQyNjUzN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "blackboard equations"
+    }
+  ]
 }
