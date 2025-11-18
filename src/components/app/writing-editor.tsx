@@ -6,7 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Lightbulb, Loader2, Sparkles, Info, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -14,6 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 
 type WritingEditorProps = {
@@ -81,45 +81,43 @@ function FeedbackDialog({ feedback, open, onOpenChange }: { feedback: ProvideAiF
 
                 <ScrollArea className="flex-grow min-h-0">
                     <div className="px-6 pb-6 space-y-6">
-                        {zeroGradeReason && (
+                        {zeroGradeReason ? (
                             <Alert variant="destructive">
                                 <AlertTriangle className="h-4 w-4" />
                                 <AlertTitle>Redação Zerada</AlertTitle>
                                 <AlertDescription>{zeroGradeReason}</AlertDescription>
                             </Alert>
-                        )}
+                        ) : null}
 
-                        <div className="flex flex-col gap-6">
-                            <Card className="bg-muted/30 text-center">
-                                <CardHeader>
-                                    <CardDescription className="uppercase font-semibold tracking-wider">Nota Geral</CardDescription>
-                                    <CardTitle className="text-6xl font-bold text-primary">{feedback.notaGeral}</CardTitle>
-                                    <p className="text-muted-foreground">/ 1000</p>
-                                </CardHeader>
-                            </Card>
-                            
-                            <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
-                                {competencies.map((comp, index) => (
-                                    <AccordionItem value={`item-${index}`} key={index}>
-                                        <AccordionTrigger className="font-semibold text-left hover:no-underline">
-                                            <div className="flex items-center justify-between w-full">
-                                                <div className="flex items-start gap-3">
-                                                    <Info className="w-4 h-4 mt-1 shrink-0" />
-                                                    <div className="flex flex-col">
-                                                        <span>{comp.name}</span>
-                                                        <span className="text-xs font-normal text-muted-foreground">{comp.description}</span>
-                                                    </div>
+                        <Card className="bg-muted/30 text-center">
+                            <CardHeader>
+                                <CardDescription className="uppercase font-semibold tracking-wider">Nota Geral</CardDescription>
+                                <CardTitle className="text-6xl font-bold text-primary">{feedback.notaGeral}</CardTitle>
+                                <p className="text-muted-foreground">/ 1000</p>
+                            </CardHeader>
+                        </Card>
+                        
+                        <div className="space-y-4">
+                            {competencies.map((comp, index) => (
+                                <Card key={index} className="overflow-hidden">
+                                    <CardHeader className="bg-muted/30">
+                                        <div className="flex items-center justify-between w-full">
+                                            <div className="flex items-start gap-3">
+                                                <Info className="w-4 h-4 mt-1 shrink-0 text-muted-foreground" />
+                                                <div className="flex flex-col">
+                                                    <CardTitle className="text-base font-semibold">{comp.name}</CardTitle>
+                                                    <CardDescription className="text-xs">{comp.description}</CardDescription>
                                                 </div>
-                                                <span className="text-lg ml-4 font-bold">{comp.score} / 200</span>
                                             </div>
-                                        </AccordionTrigger>
-                                        <AccordionContent className="space-y-3 pt-2">
-                                            <Progress value={comp.score / 2} className="h-2" />
-                                            <p className="text-sm text-muted-foreground prose prose-sm max-w-none whitespace-pre-wrap leading-relaxed">{comp.feedback}</p>
-                                        </AccordionContent>
-                                    </AccordionItem>
-                                ))}
-                            </Accordion>
+                                            <span className="text-lg ml-4 font-bold">{comp.score} / 200</span>
+                                        </div>
+                                    </CardHeader>
+                                    <CardContent className="p-4 space-y-3">
+                                        <Progress value={comp.score / 2} className="h-2" />
+                                        <p className="text-sm text-muted-foreground prose prose-sm max-w-none whitespace-pre-wrap leading-relaxed">{comp.feedback}</p>
+                                    </CardContent>
+                                </Card>
+                            ))}
                         </div>
                     </div>
                 </ScrollArea>
