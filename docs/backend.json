@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "User": {
@@ -25,6 +26,26 @@
         "email",
         "termsAccepted"
       ]
+    },
+    "StudyTask": {
+      "title": "Study Task",
+      "description": "Represents a single task in a user's study schedule.",
+      "type": "object",
+      "properties": {
+        "dayOfWeek": {
+          "type": "string",
+          "description": "The day of the week for the task (e.g., 'Segunda-feira')."
+        },
+        "subject": {
+          "type": "string",
+          "description": "The subject of the study task (e.g., 'Matemática')."
+        },
+        "topic": {
+          "type": "string",
+          "description": "The specific topic to be studied (e.g., 'Álgebra e Funções')."
+        }
+      },
+      "required": ["dayOfWeek", "subject", "topic"]
     }
   },
   "auth": {
@@ -47,6 +68,26 @@
             {
               "name": "userId",
               "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/schedule/{taskId}",
+        "definition": {
+          "entityName": "StudyTask",
+          "schema": {
+            "$ref": "#/backend/entities/StudyTask"
+          },
+          "description": "Stores individual study tasks for a user's personalized schedule. Security is enforced by ensuring the user can only access their own schedule.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+                "name": "taskId",
+                "description": "The unique identifier for the study task."
             }
           ]
         }

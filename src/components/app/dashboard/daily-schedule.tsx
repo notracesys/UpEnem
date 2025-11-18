@@ -1,15 +1,18 @@
+
 "use client"
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Loader2 } from "lucide-react";
+import type { StudyTask } from "@/lib/types";
 
-type Schedule = { [key: string]: { subject: string; topic: string }[] };
+type Schedule = { [key: string]: StudyTask[] };
 
 type DailyScheduleProps = {
   schedule: Schedule;
+  isLoading: boolean;
 };
 
 const subjectColors: { [key: string]: string } = {
@@ -23,7 +26,7 @@ const subjectColors: { [key: string]: string } = {
 
 type TodaySchedule = {
   day: string;
-  tasks: { subject: string; topic: string }[];
+  tasks: StudyTask[];
 };
 
 function getTodaySChedule(schedule: Schedule): TodaySchedule {
@@ -37,21 +40,22 @@ function getTodaySChedule(schedule: Schedule): TodaySchedule {
     return { day: todayTitleCased, tasks: [] };
 }
 
-export function DailySchedule({ schedule }: DailyScheduleProps) {
+export function DailySchedule({ schedule, isLoading }: DailyScheduleProps) {
   const [todaySchedule, setTodaySchedule] = useState<TodaySchedule | null>(null);
 
   useEffect(() => {
+    // This now runs on the client and will correctly determine the day
     setTodaySchedule(getTodaySChedule(schedule));
   }, [schedule]);
 
-  if (!todaySchedule) {
+  if (isLoading || !todaySchedule) {
     return (
       <Card>
         <CardHeader>
             <CardTitle className="font-headline">Carregando estudos de hoje...</CardTitle>
         </CardHeader>
-        <CardContent>
-            <p>Aguarde...</p>
+        <CardContent className="flex justify-center items-center p-8">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </CardContent>
       </Card>
     );
@@ -84,9 +88,9 @@ export function DailySchedule({ schedule }: DailyScheduleProps) {
           </div>
         ) : (
           <div className="text-center py-8">
-            <p className="text-muted-foreground">Você não tem estudos programados para hoje. Aproveite para descansar ou revisar!</p>
+            <p className="text-muted-foreground">Você não tem estudos programados para hoje. Aproveite para descansar ou personalizar seu cronograma!</p>
              <Link href="/cronograma" passHref>
-              <Button variant="outline" className="mt-4">Ver Cronograma Completo</Button>
+              <Button variant="outline" className="mt-4">Personalizar Cronograma</Button>
             </Link>
           </div>
         )}

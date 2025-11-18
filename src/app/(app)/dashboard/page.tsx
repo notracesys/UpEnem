@@ -1,61 +1,52 @@
 
+'use client';
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { ArrowRight, Lightbulb } from "lucide-react";
+import { ArrowRight, Lightbulb, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { generateMotivationalQuote } from "@/ai/flows/generate-motivational-quote";
 import { DailySchedule } from "@/components/app/dashboard/daily-schedule";
+import { useCollection, useUser, useFirestore, useMemoFirebase } from "@/firebase";
+import { collection, query }from "firebase/firestore";
+import type { StudyTask } from "@/lib/types";
+import { useEffect, useState, useMemo } from "react";
 
-// Revalidate the page once a day to get a new quote.
-export const revalidate = 86400; // 24 hours in seconds
+const daysOfWeek = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"];
 
-const schedule = {
-  "Segunda-feira": [
-    { subject: "Matemática", topic: "Álgebra e Funções" },
-    { subject: "Linguagens", topic: "Interpretação de Texto" },
-  ],
-  "Terça-feira": [
-    { subject: "Humanas", topic: "História do Brasil" },
-    { subject: "Natureza", topic: "Biologia Celular" },
-  ],
-  "Quarta-feira": [
-    { subject: "Redação", topic: "Prática de Argumentação" },
-    { subject: "Matemática", topic: "Geometria Plana" },
-  ],
-  "Quinta-feira": [
-    { subject: "Linguagens", topic: "Figuras de Linguagem" },
-    { subject: "Humanas", topic: "Geografia Urbana" },
-  ],
-  "Sexta-feira": [
-    { subject: "Natureza", topic: "Química Orgânica" },
-    { subject: "Revisão", topic: "Revisar tópicos da semana" },
-  ],
-  "Sábado": [],
-  "Domingo": [],
-};
 
-const chartData = Object.entries(schedule).map(([day, tasks]) => ({
-  name: day.substring(0, 3),
-  Tópicos: tasks.length,
-}));
+export default function DashboardPage() {
+  const [motivationalQuote, setMotivationalQuote] = useState<{quote: string, author: string} | null>(null);
+  const { user } = useUser();
+  const firestore = useFirestore();
 
-async function getMotivationalQuote() {
-  try {
-    const result = await generateMotivationalQuote();
-    return result;
-  } catch (error) {
-    console.error("Failed to generate motivational quote:", error);
-    return {
-      quote: "O sucesso é a soma de pequenos esforços repetidos dia após dia.",
-      author: "Robert Collier",
-    };
-  }
-}
-
-export default async function DashboardPage() {
-  const motivationalQuote = await getMotivationalQuote();
+  const scheduleQuery = useMemoFirebase(() => 
+    user ? query(collection(firestore, 'users', user.uid, 'schedule')) : null, 
+    [user, firestore]
+  );
+  const { data: schedule, isLoading } = useCollection<StudyTask>(scheduleQuery);
   
+  useEffect(() => {
+    generateMotivationalQuote().then(setMotivationalQuote).catch(err => {
+      console.error("Failed to generate motivational quote:", err);
+      setMotivationalQuote({
+        quote: "O sucesso é a soma de pequenos esforços repetidos dia após dia.",
+        author: "Robert Collier",
+      });
+    });
+  }, []);
+
+  const chartData = useMemo(() => daysOfWeek.map(day => ({
+    name: day.substring(0, 3),
+    Tópicos: schedule?.filter(task => task.dayOfWeek === day).length ?? 0,
+  })), [schedule]);
+
+  const scheduleMap = useMemo(() => daysOfWeek.reduce((acc, day) => {
+    acc[day] = schedule?.filter(task => task.dayOfWeek === day) ?? [];
+    return acc;
+  }, {} as { [key: string]: StudyTask[] }), [schedule]);
+
   return (
     <div className="space-y-8">
       <header>
@@ -70,6 +61,11 @@ export default async function DashboardPage() {
                 <CardDescription>Distribuição de tópicos de estudo ao longo da semana.</CardDescription>
             </CardHeader>
             <CardContent>
+              {isLoading ? (
+                <div className="flex justify-center items-center h-[300px]">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                </div>
+              ) : (
                 <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={chartData}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -80,6 +76,7 @@ export default async function DashboardPage() {
                         <Bar dataKey="Tópicos" fill="hsl(var(--primary))" />
                     </BarChart>
                 </ResponsiveContainer>
+              )}
             </CardContent>
         </Card>
         
@@ -91,10 +88,14 @@ export default async function DashboardPage() {
               </CardTitle>
           </CardHeader>
           <CardContent className="flex-grow flex flex-col justify-center items-center text-center">
-            <blockquote className="space-y-2">
-                <p className="text-lg font-medium">&ldquo;{motivationalQuote.quote}&rdquo;</p>
-                <footer className="text-sm text-muted-foreground">- {motivationalQuote.author}</footer>
-            </blockquote>
+             {motivationalQuote ? (
+              <blockquote className="space-y-2">
+                  <p className="text-lg font-medium">&ldquo;{motivationalQuote.quote}&rdquo;</p>
+                  <footer className="text-sm text-muted-foreground">- {motivationalQuote.author}</footer>
+              </blockquote>
+            ) : (
+              <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            )}
           </CardContent>
           <CardFooter>
             <Link href="/redacao" passHref className="w-full">
@@ -106,9 +107,8 @@ export default async function DashboardPage() {
           </CardFooter>
         </Card>
       </div>
-
-       <DailySchedule schedule={schedule} />
-
+      
+       <DailySchedule schedule={scheduleMap} isLoading={isLoading} />
     </div>
   );
 }
