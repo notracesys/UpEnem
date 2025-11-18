@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useTransition, useEffect } from "react";
@@ -7,13 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Lightbulb, Loader2, Sparkles, Info, AlertTriangle } from "lucide-react";
+import { Lightbulb, Loader2, Sparkles, Info, AlertTriangle, Pencil } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 
 type WritingEditorProps = {
@@ -24,23 +25,48 @@ type WritingEditorProps = {
   description: string;
 };
 
-function Timer() {
-  const [time, setTime] = useState(5400); // 90 minutes in seconds
+function Timer({ time, setTime }: { time: number; setTime: (time: number) => void }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [newTime, setNewTime] = useState(Math.floor(time / 60));
 
   useEffect(() => {
-    if (time <= 0) return;
+    if (time <= 0 || isEditing) return;
     const interval = setInterval(() => {
       setTime(prevTime => prevTime - 1);
     }, 1000);
     return () => clearInterval(interval);
-  }, [time]);
+  }, [time, isEditing, setTime]);
+
+  const handleSave = () => {
+    setTime(newTime * 60);
+    setIsEditing(false);
+  };
 
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
 
   return (
-    <div className="font-mono text-lg font-semibold bg-muted px-3 py-1 rounded-md">
-      {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+    <div className="flex items-center gap-2">
+      {isEditing ? (
+        <div className="flex items-center gap-2">
+          <Input 
+            type="number" 
+            value={newTime}
+            onChange={(e) => setNewTime(Number(e.target.value))}
+            className="w-20 h-8 text-center"
+            onKeyDown={(e) => e.key === 'Enter' && handleSave()}
+          />
+          <Button size="sm" onClick={handleSave}>Salvar</Button>
+        </div>
+      ) : (
+        <div 
+          className="font-mono text-lg font-semibold bg-muted px-3 py-1 rounded-md flex items-center gap-2 cursor-pointer"
+          onClick={() => setIsEditing(true)}
+        >
+          <span>{String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}</span>
+          <Pencil className="w-3 h-3 text-muted-foreground"/>
+        </div>
+      )}
     </div>
   );
 }
@@ -134,6 +160,7 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
   const [isPending, startTransition] = useTransition();
   const [isFeedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const { toast } = useToast();
+  const [time, setTime] = useState(5400); // 90 minutes in seconds
 
   useEffect(() => {
     if (topic) {
@@ -201,7 +228,7 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
                 <h1 className="text-3xl font-bold font-headline">{title}</h1>
                 <p className="text-muted-foreground">{description}</p>
             </div>
-            {showTimer && <Timer />}
+            {showTimer && <Timer time={time} setTime={setTime} />}
         </header>
 
         {topic && !initialText && (
