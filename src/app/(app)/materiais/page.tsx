@@ -3,12 +3,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FileText, Landmark, FlaskConical, Sigma } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import Link from "next/link";
 
-const categories: { id: string; name: string; icon: LucideIcon }[] = [
-  { id: "linguagens", name: "Linguagens e Códigos", icon: FileText },
-  { id: "humanas", name: "Ciências Humanas", icon: Landmark },
-  { id: "natureza", name: "Ciências da Natureza", icon: FlaskConical },
-  { id: "matematica", name: "Matemática", icon: Sigma },
+const categories: { id: string; name: string; icon: LucideIcon; link: string; }[] = [
+  { id: "linguagens", name: "Linguagens e Códigos", icon: FileText, link: "#" },
+  { id: "humanas", name: "Ciências Humanas", icon: Landmark, link: "#" },
+  { id: "natureza", name: "Ciências da Natureza", icon: FlaskConical, link: "#" },
+  { id: "matematica", name: "Matemática", icon: Sigma, link: "#" },
 ];
 
 const materialTypes = ["Apostilas PDF"];
@@ -42,7 +43,9 @@ export default function StudyMaterialsPage() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button variant="outline" className="w-full">Ver Materiais</Button>
+                <Link href={category.link} passHref target="_blank" rel="noopener noreferrer" className="w-full">
+                  <Button variant="outline" className="w-full">Ver Materiais</Button>
+                </Link>
               </CardFooter>
             </Card>
           );
