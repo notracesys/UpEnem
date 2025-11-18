@@ -21,7 +21,7 @@ import {
   HelpCircle,
   Settings,
   LogOut,
-  PenSquare,
+  TrendingUp,
 } from "lucide-react"
 import { useAuth } from "@/firebase"
 
@@ -52,7 +52,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader className="border-b border-sidebar-border">
         <div className="flex items-center gap-2 p-2">
-          <PenSquare className="w-8 h-8 text-primary" />
+          <TrendingUp className="w-8 h-8 text-primary" />
           <h1 className="text-2xl font-bold font-headline text-sidebar-foreground">
             UpEnem
           </h1>

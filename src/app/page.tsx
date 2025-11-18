@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { PenSquare } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const DURATION_HOLD = 1500; // ms to hold the logo and title
@@ -33,7 +33,7 @@ export default function SplashPage() {
             animationState === 'entering' && 'animate-in fade-in-0 zoom-in-90'
         )}>
           <div className="flex items-center gap-4">
-            <PenSquare className="w-16 h-16 text-primary" />
+            <TrendingUp className="w-16 h-16 text-primary" />
             <h1 className="text-6xl font-bold font-headline">
               UpEnem
             </h1>

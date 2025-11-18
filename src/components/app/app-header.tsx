@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { UserProfile } from "@/components/app/user-profile"
-import { PenSquare, ArrowLeft } from "lucide-react"
+import { TrendingUp, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 function BackButton() {
@@ -38,7 +38,7 @@ export function AppHeader() {
       
       <div className="flex items-center gap-2 sm:hidden">
         <Link href="/dashboard" className="flex items-center gap-2">
-          <PenSquare className="w-6 h-6 text-primary" />
+          <TrendingUp className="w-6 h-6 text-primary" />
           <span className="text-lg font-bold font-headline">UpEnem</span>
         </Link>
       </div>
