@@ -1,9 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { AlertCircle, BookOpen } from "lucide-react";
+import { ArrowRight, BookOpen, FileText } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -113,18 +113,31 @@ export default function DashboardPage() {
         </Card>
         
         <Card className="flex flex-col">
-            <CardHeader>
-                <CardTitle className="font-headline">Avisos Importantes</CardTitle>
-            </CardHeader>
-            <CardContent className="flex-grow space-y-4">
-                <div className="flex items-start gap-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <AlertCircle className="w-5 h-5 text-yellow-600 mt-1 shrink-0"/>
-                    <div>
-                        <p className="font-semibold text-yellow-800">Simulado Nacional</p>
-                        <p className="text-sm text-yellow-700">O próximo simulado nacional acontecerá em duas semanas. Não se esqueça de se inscrever!</p>
-                    </div>
-                </div>
-            </CardContent>
+          <CardHeader>
+              <CardTitle className="font-headline flex items-center gap-2">
+                <FileText />
+                Minhas Redações
+              </CardTitle>
+              <CardDescription>Acompanhe seu progresso e continue praticando.</CardDescription>
+          </CardHeader>
+          <CardContent className="flex-grow flex flex-col justify-center items-center text-center space-y-4">
+              <div>
+                  <p className="text-sm text-muted-foreground">Última nota</p>
+                  <p className="text-4xl font-bold text-primary">920</p>
+              </div>
+              <div>
+                  <p className="text-sm text-muted-foreground">Total de redações</p>
+                  <p className="text-2xl font-bold">5</p>
+              </div>
+          </CardContent>
+          <CardFooter>
+            <Link href="/redacao" passHref className="w-full">
+              <Button className="w-full">
+                Praticar Agora
+                <ArrowRight className="ml-2"/>
+              </Button>
+            </Link>
+          </CardFooter>
         </Card>
       </div>
 
