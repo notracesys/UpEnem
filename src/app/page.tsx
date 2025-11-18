@@ -7,20 +7,16 @@ import { PenSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const DURATION_HOLD = 1500; // ms to hold the logo and title
-const DURATION_FADE_OUT = 500; // ms for the final fade-out
 
 export default function SplashPage() {
   const router = useRouter();
-  const [animationState, setAnimationState] = useState('entering'); // 'entering', 'visible', 'exiting'
+  const [animationState, setAnimationState] = useState('entering'); // 'entering', 'visible'
 
   useEffect(() => {
     const sequence = async () => {
       // Hold the visible state
       await new Promise(resolve => setTimeout(resolve, DURATION_HOLD));
-      setAnimationState('exiting');
-      
-      // Wait for exit animation to finish, then redirect
-      await new Promise(resolve => setTimeout(resolve, DURATION_FADE_OUT));
+      setAnimationState('visible'); // keep it visible
       router.push('/login');
     };
     
@@ -34,8 +30,7 @@ export default function SplashPage() {
         
         <div className={cn(
             "flex flex-col items-center justify-center gap-4 transition-all duration-500 ease-in-out",
-            animationState === 'entering' && 'animate-in fade-in-0 zoom-in-90',
-            animationState === 'exiting' && 'animate-out fade-out-0 zoom-out-95'
+            animationState === 'entering' && 'animate-in fade-in-0 zoom-in-90'
         )}>
           <div className="flex items-center gap-4">
             <PenSquare className="w-16 h-16 text-primary" />
@@ -45,8 +40,7 @@ export default function SplashPage() {
           </div>
           <p className={cn(
               "text-xl text-muted-foreground transition-all duration-500 delay-300",
-              animationState === 'entering' ? 'animate-in fade-in-0' : 'opacity-100',
-              animationState === 'exiting' ? 'opacity-0' : 'opacity-100'
+              animationState === 'entering' ? 'animate-in fade-in-0' : 'opacity-100'
           )}>
             Sua preparação começa aqui.
           </p>
