@@ -28,44 +28,81 @@ function TermsAndConditionsDialog() {
         </DialogHeader>
         <ScrollArea className="h-[450px] pr-4">
           <div className="text-sm text-muted-foreground space-y-4">
-            <p><strong>Última atualização:</strong> [Data]</p>
+            <p><strong>Última atualização:</strong> 18/11/2025</p>
 
-            <p>Bem-vindo ao UpEnem. Ao se registrar e usar nossa plataforma, você concorda com os seguintes termos e condições. Por favor, leia-os com atenção.</p>
+            <p>Bem-vindo(a) ao UpEnem, uma plataforma digital especializada em preparação para o Exame Nacional do Ensino Médio (ENEM). Oferecemos apostilas exclusivas, simulados, videoaulas, ferramentas de estudo e um sistema de correção de redações com Inteligência Artificial (IA). Ao acessar ou utilizar o UpEnem, você concorda com estes Termos e Condições.</p>
             
             <h3 className="font-bold text-foreground">1. Aceitação dos Termos</h3>
-            <p>Ao criar uma conta e utilizar os serviços oferecidos pelo UpEnem ("Plataforma"), você concorda em cumprir e estar vinculado a estes Termos e Condições. Se você não concorda com qualquer parte dos termos, não poderá usar nossos serviços.</p>
+            <p>Ao criar uma conta ou utilizar qualquer funcionalidade do UpEnem, o usuário declara estar ciente e de acordo com todas as regras estabelecidas neste documento. Caso não concorde com algum ponto, não deverá utilizar a plataforma.</p>
 
-            <h3 className="font-bold text-foreground">2. Descrição dos Serviços</h3>
-            <p>O UpEnem oferece uma plataforma de estudos para o Exame Nacional do Ensino Médio (ENEM), incluindo: prática de redação com correção por Inteligência Artificial (IA), acesso a materiais de estudo, cronogramas, simulados e geração de temas para redação.</p>
-
-            <h3 className="font-bold text-foreground">3. Conta do Usuário</h3>
-            <p>Para acessar os recursos da plataforma, você deve criar uma conta fornecendo um e-mail e uma senha. Você é responsável por manter a confidencialidade de sua conta e senha e por restringir o acesso ao seu computador. Você concorda em aceitar a responsabilidade por todas as atividades que ocorram em sua conta.</p>
-
-            <h3 className="font-bold text-foreground">4. Uso da Plataforma</h3>
-            <p>Você concorda em usar a Plataforma apenas para fins legais e de acordo com estes Termos. Você não deve usar a Plataforma:</p>
+            <h3 className="font-bold text-foreground">2. Cadastro e Responsabilidade do Usuário</h3>
             <ul className="list-disc list-inside space-y-2">
-                <li>De qualquer forma que viole qualquer lei ou regulamentação aplicável.</li>
-                <li>Para enviar qualquer material de redação que seja ilegal, ofensivo, difamatório, ou que infrinja os direitos de propriedade intelectual de terceiros.</li>
-                <li>Para se passar por qualquer pessoa ou entidade, ou declarar falsamente ou deturpar sua afiliação com uma pessoa ou entidade.</li>
+                <li>O usuário deve fornecer informações verdadeiras e atualizadas ao criar sua conta.</li>
+                <li>É responsável pela segurança de seu login e senha.</li>
+                <li>É proibido compartilhar, vender ou emprestar o acesso da conta a terceiros.</li>
             </ul>
 
-            <h3 className="font-bold text-foreground">5. Correção por Inteligência Artificial</h3>
-            <p>A correção de redações por IA é uma ferramenta de suporte ao aprendizado. Embora nossa IA seja treinada para fornecer feedback detalhado com base nas competências do ENEM, a pontuação é uma estimativa. A avaliação não substitui a correção de um avaliador humano e deve ser usada como um guia para melhoria.</p>
+            <h3 className="font-bold text-foreground">3. Serviços Oferecidos pelo UpEnem</h3>
+            <p>O UpEnem disponibiliza:</p>
+            <ul className="list-disc list-inside space-y-2">
+                <li>Apostilas digitais e materiais de estudo;</li>
+                <li>Simulados, questões e videoaulas;</li>
+                <li>Correção de redações por IA, baseada na matriz de competências do ENEM;</li>
+                <li>Ferramentas de organização de estudos, como cronogramas e análise de desempenho.</li>
+            </ul>
+            <p>A plataforma poderá adicionar, alterar ou remover funcionalidades quando necessário.</p>
+            
+            <h3 className="font-bold text-foreground">4. Uso das Apostilas e Materiais</h3>
+            <p>Todo conteúdo do UpEnem é protegido por direitos autorais.</p>
+             <ul className="list-disc list-inside space-y-2">
+                <li>É proibido copiar, distribuir, revender ou compartilhar documentos, vídeos e outros materiais da plataforma.</li>
+                <li>O uso é exclusivamente pessoal.</li>
+            </ul>
 
-            <h3 className="font-bold text-foreground">6. Propriedade Intelectual</h3>
-            <p>Todo o conteúdo gerado pela nossa plataforma (como temas de redação e análises) e o conteúdo fornecido por nós (textos, gráficos, logos) são de propriedade do UpEnem e protegidos por leis de direitos autorais. O conteúdo que você produz (suas redações) permanece de sua propriedade, mas você nos concede uma licença para usar, analisar e processar esse conteúdo para fornecer os serviços de correção.</p>
+            <h3 className="font-bold text-foreground">5. Correção de Redações por IA</h3>
+             <ul className="list-disc list-inside space-y-2">
+                <li>As redações enviadas são avaliadas por Inteligência Artificial e, quando aplicável, por revisores humanos.</li>
+                <li>As notas e comentários possuem caráter orientativo, não oficial.</li>
+                <li>Os textos podem ser utilizados de forma anonimizada para aprimoramento do sistema.</li>
+                <li>O usuário reconhece que o sistema pode apresentar limitações e deve ser utilizado como apoio ao estudo.</li>
+            </ul>
 
-            <h3 className="font-bold text-foreground">7. Isenção de Garantias</h3>
-            <p>A Plataforma é fornecida "como está". Não garantimos que o serviço será ininterrupto, seguro ou livre de erros. A precisão e a confiabilidade das correções de IA podem variar.</p>
+            <h3 className="font-bold text-foreground">6. Assinaturas, Pagamentos e Reembolsos</h3>
+            <ul className="list-disc list-inside space-y-2">
+                <li>Recursos pagos são liberados após confirmação do pagamento.</li>
+                <li>A não renovação da assinatura impede o acesso aos conteúdos premium.</li>
+                <li>Reembolsos seguem a legislação aplicável e as condições internas do UpEnem.</li>
+                <li>Promoções podem ser alteradas sem aviso prévio.</li>
+            </ul>
+
+            <h3 className="font-bold text-foreground">7. Condutas Proibidas</h3>
+            <p>O usuário não poderá:</p>
+            <ul className="list-disc list-inside space-y-2">
+                <li>Compartilhar ou distribuir conteúdos do UpEnem;</li>
+                <li>Reutilizar materiais para fins comerciais;</li>
+                <li>Tentar invadir ou manipular sistemas da plataforma;</li>
+                <li>Enviar conteúdos ilegais, ofensivos ou inadequados;</li>
+                <li>Tentar interferir no funcionamento do sistema de IA.</li>
+            </ul>
 
             <h3 className="font-bold text-foreground">8. Limitação de Responsabilidade</h3>
-            <p>Em nenhuma circunstância o UpEnem será responsável por quaisquer danos indiretos, incidentais, especiais, consequenciais ou punitivos resultantes do seu acesso ou uso, ou incapacidade de acessar ou usar, a plataforma.</p>
+            <p>O UpEnem não garante:</p>
+            <ul className="list-disc list-inside space-y-2">
+                <li>Aprovação ou desempenho específico no ENEM;</li>
+                <li>Precisão total das notas fornecidas pela IA;</li>
+                <li>Funcionamento ininterrupto da plataforma;</li>
+                <li>Compatibilidade absoluta com todos os dispositivos e redes.</li>
+            </ul>
+            <p>A plataforma é fornecida “como está”, podendo sofrer melhorias, ajustes e manutenções.</p>
 
-            <h3 className="font-bold text-foreground">9. Modificações nos Termos</h3>
-            <p>Reservamo-nos o direito de modificar estes termos a qualquer momento. Notificaremos sobre quaisquer alterações, publicando os novos termos na plataforma. A continuação do uso da plataforma após tais alterações constitui sua aceitação dos novos Termos e Condições.</p>
+            <h3 className="font-bold text-foreground">9. Alterações dos Termos</h3>
+            <p>O UpEnem pode modificar estes Termos a qualquer momento. O uso contínuo após alterações implica concordância com a versão atualizada.</p>
 
-            <h3 className="font-bold text-foreground">10. Contato</h3>
-            <p>Se você tiver alguma dúvida sobre estes Termos, entre em contato conosco através da página de Suporte.</p>
+            <h3 className="font-bold text-foreground">10. Cancelamento e Exclusão de Conta</h3>
+             <ul className="list-disc list-inside space-y-2">
+                <li>O usuário pode solicitar a exclusão da conta ou cancelamento da assinatura a qualquer momento.</li>
+                <li>O UpEnem pode suspender contas que violem estes Termos ou prejudiquem o funcionamento da plataforma.</li>
+            </ul>
         </div>
         </ScrollArea>
       </DialogContent>
