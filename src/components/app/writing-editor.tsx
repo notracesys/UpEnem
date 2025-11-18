@@ -70,8 +70,8 @@ function FeedbackDialog({ feedback, open, onOpenChange }: { feedback: ProvideAiF
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col p-0">
-                <DialogHeader className="p-6 pb-2 flex-shrink-0">
+            <DialogContent className="max-w-4xl p-0">
+                <DialogHeader className="p-6 pb-4 border-b">
                     <DialogTitle className="flex items-center gap-2 font-headline text-2xl">
                         <Sparkles className="text-primary"/>
                         Feedback da IA
@@ -79,8 +79,8 @@ function FeedbackDialog({ feedback, open, onOpenChange }: { feedback: ProvideAiF
                     <DialogDescription>Aqui está a análise completa da sua redação.</DialogDescription>
                 </DialogHeader>
 
-                <ScrollArea className="flex-grow min-h-0">
-                    <div className="px-6 pb-6 space-y-6">
+                <ScrollArea className="h-[70vh]">
+                    <div className="p-6 space-y-6">
                         {zeroGradeReason ? (
                             <Alert variant="destructive">
                                 <AlertTriangle className="h-4 w-4" />
