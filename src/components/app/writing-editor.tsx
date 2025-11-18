@@ -233,15 +233,8 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
         <Textarea
           placeholder="Comece a escrever sua redação aqui..."
           className="min-h-[50vh] text-base"
-          defaultValue={initialText ? `${initialText}\n\n` : ''}
-          onChange={(e) => {
-            if(initialText) {
-                const newText = e.target.value.replace(initialText + '\n\n', '');
-                setEssay(newText);
-            } else {
-                setEssay(e.target.value);
-            }
-          }}
+          value={essay}
+          onChange={(e) => setEssay(e.target.value)}
         />
         <Button onClick={getFeedback} disabled={isPending} size="lg" className="w-full sm:w-auto">
           {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
