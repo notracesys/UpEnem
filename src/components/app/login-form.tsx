@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Loader2 } from 'lucide-react';
 
 function TermsAndConditionsDialog() {
   return (
@@ -119,6 +120,8 @@ export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [agreed, setAgreed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('Verificando...');
   
   const handleAuthAction = async () => {
     if (!agreed) {
@@ -129,14 +132,19 @@ export function LoginForm() {
       });
       return;
     }
+    
+    setIsLoading(true);
+    setLoadingMessage('Verificando...');
 
     try {
       await initiateEmailSignIn(auth, email, password);
+      setLoadingMessage("Login concluído, aguarde...");
       router.push('/dashboard');
     } catch (signInError: any) {
       if (signInError.code === 'auth/invalid-credential' || signInError.code === 'auth/user-not-found') {
         try {
           await createUserWithEmailAndPassword(auth, email, password);
+          setLoadingMessage("Conta criada! Aguarde...");
           router.push('/dashboard');
         } catch (signUpError: any) {
           toast({
@@ -144,6 +152,7 @@ export function LoginForm() {
             description: signUpError.message || "Não foi possível criar sua conta. Verifique os dados e tente novamente.",
             variant: "destructive",
           });
+          setIsLoading(false);
         }
       } else {
         toast({
@@ -151,6 +160,7 @@ export function LoginForm() {
           description: signInError.message || "Ocorreu um erro. Verifique suas credenciais e tente novamente.",
           variant: "destructive",
         });
+        setIsLoading(false);
       }
     }
   };
@@ -168,14 +178,14 @@ export function LoginForm() {
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="seuemail@exemplo.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input id="email" type="email" placeholder="seuemail@exemplo.com" value={email} onChange={(e) => setEmail(e.target.value)} disabled={isLoading} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="password">Senha</Label>
-          <Input id="password" type="password" placeholder="********" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <Input id="password" type="password" placeholder="********" value={password} onChange={(e) => setPassword(e.target.value)} disabled={isLoading} />
         </div>
         <div className="flex items-center space-x-2">
-          <Checkbox id="terms" checked={agreed} onCheckedChange={(checked) => setAgreed(checked as boolean)} />
+          <Checkbox id="terms" checked={agreed} onCheckedChange={(checked) => setAgreed(checked as boolean)} disabled={isLoading} />
           <TermsAndConditionsDialog />
         </div>
       </CardContent>
@@ -184,9 +194,15 @@ export function LoginForm() {
           className="w-full" 
           size="lg" 
           onClick={handleAuthAction} 
-          disabled={!agreed || !email || !password}
+          disabled={!agreed || !email || !password || isLoading}
         >
-          ACESSAR MINHA CONTA
+          {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {loadingMessage}
+              </>
+            ) : "ACESSAR MINHA CONTA"
+          }
         </Button>
       </CardFooter>
     </Card>
