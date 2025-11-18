@@ -203,7 +203,7 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
         }
       } catch (error: any) {
         console.error(error);
-        if (error.message && error.message.includes('503')) {
+        if (error.message && (error.message.includes('503') || error.message.includes('overloaded'))) {
           toast({
             title: "Serviço Indisponível",
             description: "A IA está sobrecarregada no momento. Por favor, tente novamente em alguns instantes.",
@@ -231,7 +231,7 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
             {showTimer && <Timer time={time} setTime={setTime} />}
         </header>
 
-        {topic && !initialText && (
+        {topic && !initialText && !topic.includes("Não foi possível carregar") && (
           <Alert>
             <Lightbulb className="h-4 w-4" />
             <AlertTitle>Tema Proposto</AlertTitle>
@@ -247,8 +247,8 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
                     placeholder="Digite o tema da redação"
                     value={essayTopic}
                     onChange={(e) => setEssayTopic(e.target.value)} 
-                    disabled={!!topic}
-                    readOnly={!!topic}
+                    disabled={!!topic && !topic.includes("Não foi possível carregar")}
+                    readOnly={!!topic && !topic.includes("Não foi possível carregar")}
                 />
             </div>
             <div className="space-y-2">
