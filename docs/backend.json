@@ -1,0 +1,57 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the Ocorretor.ai platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user.",
+          "format": "email"
+        },
+        "termsAccepted": {
+          "type": "boolean",
+          "description": "Indicates whether the user has accepted the terms and conditions."
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "termsAccepted"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profiles. Uses path-based ownership for enhanced security.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to support user authentication and content management for the Ocorretor.ai application. It prioritizes authorization independence by using path-based ownership for user data. All documents in a collection share the same security requirements. The structure supports list operations securely (QAPs) via segregation. User data is stored under `/users/{userId}` to clearly establish ownership. This design eliminates the need for `get()` calls in security rules and enables atomic operations, enhancing security and debuggability."
+  }
+}
