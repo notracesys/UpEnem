@@ -18,7 +18,7 @@ export default function StudyMaterialsPage() {
     <div className="space-y-8">
       <header>
         <h1 className="text-3xl font-bold font-headline">Materiais de Estudo</h1>
-        <p className="text-muted-foreground">Acesse nossas apostilas e arquivos de destaque para aprofundar seus conhecimentos.</p>
+        <p className="text-muted-foreground">Acesse apostilas e materiais de estudo para aprofundar seus conhecimentos.</p>
       </header>
 
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
