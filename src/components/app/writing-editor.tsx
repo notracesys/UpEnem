@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Lightbulb, Loader2, Sparkles, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Progress } from "@/components/ui/progress";
@@ -40,10 +41,69 @@ function Timer() {
   );
 }
 
+function FeedbackDialog({ feedback, open, onOpenChange }: { feedback: ProvideAiFeedbackOnEssayOutput | null, open: boolean, onOpenChange: (open: boolean) => void }) {
+    if (!feedback) return null;
+
+    const competencies = [
+        { name: "Competência 1", score: feedback.competencia1.score, feedback: feedback.competencia1.feedback },
+        { name: "Competência 2", score: feedback.competencia2.score, feedback: feedback.competencia2.feedback },
+        { name: "Competência 3", score: feedback.competencia3.score, feedback: feedback.competencia3.feedback },
+        { name: "Competência 4", score: feedback.competencia4.score, feedback: feedback.competencia4.feedback },
+        { name: "Competência 5", score: feedback.competencia5.score, feedback: feedback.competencia5.feedback },
+    ];
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="max-w-3xl">
+                <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2 font-headline text-2xl">
+                        <Sparkles className="text-primary"/>
+                        Feedback da IA
+                    </DialogTitle>
+                    <DialogDescription>Aqui está a análise completa da sua redação.</DialogDescription>
+                </DialogHeader>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-4">
+                    <div className="md:col-span-1">
+                        <Card className="bg-muted/30 text-center sticky top-20">
+                            <CardHeader>
+                                <CardDescription className="uppercase font-semibold tracking-wider">Nota Geral</CardDescription>
+                                <CardTitle className="text-6xl font-bold text-primary">{feedback.notaGeral}</CardTitle>
+                                <p className="text-muted-foreground">/ 1000</p>
+                            </CardHeader>
+                        </Card>
+                    </div>
+                    <div className="md:col-span-2">
+                         <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
+                            {competencies.map((comp, index) => (
+                                <AccordionItem value={`item-${index}`} key={index}>
+                                    <AccordionTrigger className="font-semibold">
+                                        <div className="flex items-center justify-between w-full">
+                                            <div className="flex items-center gap-2">
+                                                <Info className="w-4 h-4" />
+                                                <span>{comp.name}</span>
+                                            </div>
+                                            <span>{comp.score} / 200</span>
+                                        </div>
+                                    </AccordionTrigger>
+                                    <AccordionContent className="space-y-2">
+                                        <Progress value={comp.score / 2} className="h-2" />
+                                        <p className="text-sm text-muted-foreground prose prose-sm max-w-none whitespace-pre-wrap">{comp.feedback}</p>
+                                    </AccordionContent>
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 export function WritingEditor({ topic, initialText, showTimer, title, description }: WritingEditorProps) {
   const [essay, setEssay] = useState("");
   const [feedback, setFeedback] = useState<ProvideAiFeedbackOnEssayOutput | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [isFeedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const { toast } = useToast();
 
   const getFeedback = async () => {
@@ -60,6 +120,7 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
       const result = await provideAiFeedbackOnEssay({ essay });
       if (result) {
         setFeedback(result);
+        setFeedbackModalOpen(true);
       } else {
         toast({
           title: "Erro na Correção",
@@ -70,17 +131,9 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
     });
   };
   
-  const competencies = feedback ? [
-    { name: "Competência 1", score: feedback.competencia1.score, feedback: feedback.competencia1.feedback },
-    { name: "Competência 2", score: feedback.competencia2.score, feedback: feedback.competencia2.feedback },
-    { name: "Competência 3", score: feedback.competencia3.score, feedback: feedback.competencia3.feedback },
-    { name: "Competência 4", score: feedback.competencia4.score, feedback: feedback.competencia4.feedback },
-    { name: "Competência 5", score: feedback.competencia5.score, feedback: feedback.competencia5.feedback },
-  ] : [];
-
   return (
-    <div className="grid gap-8 lg:grid-cols-3">
-      <div className="lg:col-span-2 space-y-6">
+    <>
+      <div className="space-y-6">
         <header className="flex justify-between items-start">
             <div>
                 <h1 className="text-3xl font-bold font-headline">{title}</h1>
@@ -111,7 +164,7 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
 
         <Textarea
           placeholder="Comece a escrever sua redação aqui..."
-          className="min-h-[500px] text-base"
+          className="min-h-[60vh] text-base"
           value={essay}
           onChange={(e) => setEssay(e.target.value)}
         />
@@ -120,58 +173,7 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
           Corrigir com IA
         </Button>
       </div>
-
-      <div className="lg:col-span-1">
-        <Card className="sticky top-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 font-headline">
-              <Sparkles className="text-primary"/>
-              Feedback da IA
-            </CardTitle>
-            <CardDescription>
-              {isPending ? "Analisando sua redação..." : feedback ? "Aqui está a análise da sua redação." : "Clique no botão de correção para receber o feedback."}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="min-h-[400px]">
-            {isPending && (
-              <div className="flex items-center justify-center h-full">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              </div>
-            )}
-            {feedback && (
-                <div className="space-y-4">
-                     <Card className="bg-muted/30 text-center">
-                        <CardHeader>
-                            <CardDescription className="uppercase font-semibold tracking-wider">Nota Geral</CardDescription>
-                            <CardTitle className="text-5xl font-bold text-primary">{feedback.notaGeral}</CardTitle>
-                            <p className="text-muted-foreground">/ 1000</p>
-                        </CardHeader>
-                    </Card>
-
-                    <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
-                        {competencies.map((comp, index) => (
-                            <AccordionItem value={`item-${index}`} key={index}>
-                                <AccordionTrigger className="font-semibold">
-                                    <div className="flex items-center justify-between w-full">
-                                        <div className="flex items-center gap-2">
-                                            <Info className="w-4 h-4" />
-                                            <span>{comp.name}</span>
-                                        </div>
-                                        <span>{comp.score} / 200</span>
-                                    </div>
-                                </AccordionTrigger>
-                                <AccordionContent className="space-y-2">
-                                    <Progress value={comp.score / 2} className="h-2" />
-                                    <p className="text-sm text-muted-foreground prose prose-sm max-w-none whitespace-pre-wrap">{comp.feedback}</p>
-                                </AccordionContent>
-                            </AccordionItem>
-                        ))}
-                    </Accordion>
-                </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+      <FeedbackDialog feedback={feedback} open={isFeedbackModalOpen} onOpenChange={setFeedbackModalOpen} />
+    </>
   );
 }
