@@ -42,9 +42,8 @@ export default function SimulationsPage() {
             <CardContent className="flex-grow">
               <CardDescription>{sim.description}</CardDescription>
             </CardContent>
-            <CardFooter className="flex gap-2">
+            <CardFooter>
               <Button className="w-full">Iniciar Simulado</Button>
-              <Button variant="outline" className="w-full">Gabarito</Button>
             </CardFooter>
           </Card>
         ))}
