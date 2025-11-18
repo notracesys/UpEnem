@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 
 type WritingEditorProps = {
@@ -48,66 +49,73 @@ function FeedbackDialog({ feedback, open, onOpenChange }: { feedback: ProvideAiF
     if (!feedback) return null;
 
     const competencies = [
-        { name: "Competência 1", score: feedback.competencia1.score, feedback: feedback.competencia1.feedback },
-        { name: "Competência 2", score: feedback.competencia2.score, feedback: feedback.competencia2.feedback },
-        { name: "Competência 3", score: feedback.competencia3.score, feedback: feedback.competencia3.feedback },
-        { name: "Competência 4", score: feedback.competencia4.score, feedback: feedback.competencia4.feedback },
-        { name: "Competência 5", score: feedback.competencia5.score, feedback: feedback.competencia5.feedback },
+        { name: "Competência 1", score: feedback.competencia1.score, feedback: feedback.competencia1.feedback, description: "Demonstrar domínio da modalidade escrita formal da Língua Portuguesa." },
+        { name: "Competência 2", score: feedback.competencia2.score, feedback: feedback.competencia2.feedback, description: "Compreender a proposta e aplicar conceitos para desenvolver o tema." },
+        { name: "Competência 3", score: feedback.competencia3.score, feedback: feedback.competencia3.feedback, description: "Selecionar, organizar e interpretar informações em defesa de um ponto de vista." },
+        { name: "Competência 4", score: feedback.competencia4.score, feedback: feedback.competencia4.feedback, description: "Demonstrar conhecimento dos mecanismos linguísticos para a argumentação." },
+        { name: "Competência 5", score: feedback.competencia5.score, feedback: feedback.competencia5.feedback, description: "Elaborar proposta de intervenção respeitando os direitos humanos." },
     ];
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-3xl">
-                <DialogHeader>
+            <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col p-0">
+                <DialogHeader className="p-6 pb-2">
                     <DialogTitle className="flex items-center gap-2 font-headline text-2xl">
                         <Sparkles className="text-primary"/>
                         Feedback da IA
                     </DialogTitle>
                     <DialogDescription>Aqui está a análise completa da sua redação.</DialogDescription>
                 </DialogHeader>
-                
-                {feedback.fugaAoTema && (
-                    <Alert variant="destructive">
-                        <AlertTriangle className="h-4 w-4" />
-                        <AlertTitle>Fuga Total ao Tema</AlertTitle>
-                        <AlertDescription>
-                           Sua redação foi considerada uma "fuga total ao tema", o que leva à anulação da Competência 2. Revise o tema proposto e tente novamente.
-                        </AlertDescription>
-                    </Alert>
-                )}
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-4">
-                    <div className="md:col-span-1">
-                        <Card className="bg-muted/30 text-center sticky top-20">
-                            <CardHeader>
-                                <CardDescription className="uppercase font-semibold tracking-wider">Nota Geral</CardDescription>
-                                <CardTitle className="text-6xl font-bold text-primary">{feedback.notaGeral}</CardTitle>
-                                <p className="text-muted-foreground">/ 1000</p>
-                            </CardHeader>
-                        </Card>
+                <ScrollArea className="flex-grow">
+                    <div className="px-6 pb-6 space-y-4">
+                        {feedback.fugaAoTema && (
+                            <Alert variant="destructive">
+                                <AlertTriangle className="h-4 w-4" />
+                                <AlertTitle>Fuga Total ao Tema</AlertTitle>
+                                <AlertDescription>
+                                Sua redação foi zerada por fuga total ao tema. Analise a proposta com mais atenção e tente novamente.
+                                </AlertDescription>
+                            </Alert>
+                        )}
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="md:col-span-1">
+                                <Card className="bg-muted/30 text-center sticky top-0">
+                                    <CardHeader>
+                                        <CardDescription className="uppercase font-semibold tracking-wider">Nota Geral</CardDescription>
+                                        <CardTitle className="text-6xl font-bold text-primary">{feedback.notaGeral}</CardTitle>
+                                        <p className="text-muted-foreground">/ 1000</p>
+                                    </CardHeader>
+                                </Card>
+                            </div>
+                            <div className="md:col-span-2 space-y-4">
+                                <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
+                                    {competencies.map((comp, index) => (
+                                        <AccordionItem value={`item-${index}`} key={index}>
+                                            <AccordionTrigger className="font-semibold text-left">
+                                                <div className="flex items-center justify-between w-full">
+                                                    <div className="flex items-start gap-2">
+                                                        <Info className="w-4 h-4 mt-1 shrink-0" />
+                                                        <div className="flex flex-col">
+                                                            <span>{comp.name}</span>
+                                                            <span className="text-xs font-normal text-muted-foreground">{comp.description}</span>
+                                                        </div>
+                                                    </div>
+                                                    <span className="text-lg ml-4">{comp.score} / 200</span>
+                                                </div>
+                                            </AccordionTrigger>
+                                            <AccordionContent className="space-y-3">
+                                                <Progress value={comp.score / 2} className="h-2" />
+                                                <p className="text-sm text-muted-foreground prose prose-sm max-w-none whitespace-pre-wrap leading-relaxed">{comp.feedback}</p>
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                    ))}
+                                </Accordion>
+                            </div>
+                        </div>
                     </div>
-                    <div className="md:col-span-2">
-                         <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
-                            {competencies.map((comp, index) => (
-                                <AccordionItem value={`item-${index}`} key={index}>
-                                    <AccordionTrigger className="font-semibold">
-                                        <div className="flex items-center justify-between w-full">
-                                            <div className="flex items-center gap-2">
-                                                <Info className="w-4 h-4" />
-                                                <span>{comp.name}</span>
-                                            </div>
-                                            <span>{comp.score} / 200</span>
-                                        </div>
-                                    </AccordionTrigger>
-                                    <AccordionContent className="space-y-2">
-                                        <Progress value={comp.score / 2} className="h-2" />
-                                        <p className="text-sm text-muted-foreground prose prose-sm max-w-none whitespace-pre-wrap">{comp.feedback}</p>
-                                    </AccordionContent>
-                                </AccordionItem>
-                            ))}
-                        </Accordion>
-                    </div>
-                </div>
+                </ScrollArea>
             </DialogContent>
         </Dialog>
     )
