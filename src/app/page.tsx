@@ -3,68 +3,55 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { PenSquare } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-const DURATION_COUNTING = 1200; // ms for the count-up animation
-const DURATION_HOLD = 250;     // ms to hold the final name
-const DURATION_FADE_OUT = 500; // ms for the final fade-out before redirect
+const DURATION_HOLD = 1500; // ms to hold the logo and title
+const DURATION_FADE_OUT = 500; // ms for the final fade-out
 
 export default function SplashPage() {
   const router = useRouter();
-  const [score, setScore] = useState(0);
-  const [animationState, setAnimationState] = useState('counting'); // 'counting', 'revealing'
+  const [animationState, setAnimationState] = useState('entering'); // 'entering', 'visible', 'exiting'
 
   useEffect(() => {
-    if (animationState === 'counting') {
-      const targetScore = 1000;
-      const increment = Math.ceil(targetScore / (DURATION_COUNTING / 50));
+    const sequence = async () => {
+      // Hold the visible state
+      await new Promise(resolve => setTimeout(resolve, DURATION_HOLD));
+      setAnimationState('exiting');
       
-      const timer = setInterval(() => {
-        setScore(prevScore => {
-          if (prevScore < targetScore) {
-            return Math.min(prevScore + increment, targetScore);
-          }
-          clearInterval(timer);
-          // When score reaches 1000, switch to revealing the name
-          setTimeout(() => setAnimationState('revealing'), 100);
-          return targetScore;
-        });
-      }, 50);
+      // Wait for exit animation to finish, then redirect
+      await new Promise(resolve => setTimeout(resolve, DURATION_FADE_OUT));
+      router.push('/login');
+    };
+    
+    sequence();
 
-      return () => clearInterval(timer);
-    } else if (animationState === 'revealing') {
-      // After the name is revealed and holds, redirect to login
-      const redirectTimer = setTimeout(() => {
-        router.push('/login');
-      }, DURATION_HOLD + DURATION_FADE_OUT);
-
-      return () => clearTimeout(redirectTimer);
-    }
-  }, [animationState, router]);
+  }, [router]);
 
   return (
     <main className="font-body">
       <div className="flex h-screen w-full items-center justify-center bg-background overflow-hidden">
-        <div className="relative flex items-center justify-center w-64 h-24">
-          
-          {/* Score Counter */}
-          <div className={
-              `absolute inset-0 flex items-center justify-center text-6xl font-bold text-primary transition-all duration-300
-              ${animationState === 'revealing' ? 'animate-out fade-out-0 zoom-out-50' : 'animate-in fade-in-0'}`
-          }>
-            {score}
-          </div>
-
-          {/* Site Name */}
-          <div className={
-              `absolute inset-0 flex items-center justify-center transition-all duration-300
-              ${animationState === 'revealing' ? 'animate-in fade-in-0 zoom-in-125' : 'opacity-0'}`
-          }>
-            <h1 className="text-5xl font-bold font-headline text-center">
+        
+        <div className={cn(
+            "flex flex-col items-center justify-center gap-4 transition-all duration-500 ease-in-out",
+            animationState === 'entering' && 'animate-in fade-in-0 zoom-in-90',
+            animationState === 'exiting' && 'animate-out fade-out-0 zoom-out-95'
+        )}>
+          <div className="flex items-center gap-4">
+            <PenSquare className="w-16 h-16 text-primary" />
+            <h1 className="text-6xl font-bold font-headline">
               UpEnem
             </h1>
           </div>
-
+          <p className={cn(
+              "text-xl text-muted-foreground transition-all duration-500 delay-300",
+              animationState === 'entering' ? 'animate-in fade-in-0' : 'opacity-100',
+              animationState === 'exiting' ? 'opacity-0' : 'opacity-100'
+          )}>
+            Sua preparação começa aqui.
+          </p>
         </div>
+
       </div>
     </main>
   );
