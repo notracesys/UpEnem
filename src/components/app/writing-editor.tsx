@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useTransition, useEffect } from "react";
-import { provideAiFeedbackOnEssay } from "@/ai/flows/provide-ai-feedback-on-essay";
+import { provideAiFeedbackOnEssay, ProvideAiFeedbackOnEssayOutput } from "@/ai/flows/provide-ai-feedback-on-essay";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Lightbulb, Loader2, Sparkles } from "lucide-react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Lightbulb, Loader2, Sparkles, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Progress } from "@/components/ui/progress";
 
 type WritingEditorProps = {
   topic?: string;
@@ -40,7 +42,7 @@ function Timer() {
 
 export function WritingEditor({ topic, initialText, showTimer, title, description }: WritingEditorProps) {
   const [essay, setEssay] = useState("");
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<ProvideAiFeedbackOnEssayOutput | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
@@ -56,8 +58,8 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
     startTransition(async () => {
       setFeedback(null);
       const result = await provideAiFeedbackOnEssay({ essay });
-      if (result.feedback) {
-        setFeedback(result.feedback);
+      if (result) {
+        setFeedback(result);
       } else {
         toast({
           title: "Erro na Correção",
@@ -67,6 +69,14 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
       }
     });
   };
+  
+  const competencies = feedback ? [
+    { name: "Competência 1", score: feedback.competencia1.score, feedback: feedback.competencia1.feedback },
+    { name: "Competência 2", score: feedback.competencia2.score, feedback: feedback.competencia2.feedback },
+    { name: "Competência 3", score: feedback.competencia3.score, feedback: feedback.competencia3.feedback },
+    { name: "Competência 4", score: feedback.competencia4.score, feedback: feedback.competencia4.feedback },
+    { name: "Competência 5", score: feedback.competencia5.score, feedback: feedback.competencia5.feedback },
+  ] : [];
 
   return (
     <div className="grid gap-8 lg:grid-cols-3">
@@ -128,7 +138,37 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>
             )}
-            {feedback && <div className="prose prose-sm max-w-none whitespace-pre-wrap">{feedback}</div>}
+            {feedback && (
+                <div className="space-y-4">
+                     <Card className="bg-muted/30 text-center">
+                        <CardHeader>
+                            <CardDescription className="uppercase font-semibold tracking-wider">Nota Geral</CardDescription>
+                            <CardTitle className="text-5xl font-bold text-primary">{feedback.notaGeral}</CardTitle>
+                            <p className="text-muted-foreground">/ 1000</p>
+                        </CardHeader>
+                    </Card>
+
+                    <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
+                        {competencies.map((comp, index) => (
+                            <AccordionItem value={`item-${index}`} key={index}>
+                                <AccordionTrigger className="font-semibold">
+                                    <div className="flex items-center justify-between w-full">
+                                        <div className="flex items-center gap-2">
+                                            <Info className="w-4 h-4" />
+                                            <span>{comp.name}</span>
+                                        </div>
+                                        <span>{comp.score} / 200</span>
+                                    </div>
+                                </AccordionTrigger>
+                                <AccordionContent className="space-y-2">
+                                    <Progress value={comp.score / 2} className="h-2" />
+                                    <p className="text-sm text-muted-foreground prose prose-sm max-w-none whitespace-pre-wrap">{comp.feedback}</p>
+                                </AccordionContent>
+                            </AccordionItem>
+                        ))}
+                    </Accordion>
+                </div>
+            )}
           </CardContent>
         </Card>
       </div>
