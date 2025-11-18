@@ -22,6 +22,7 @@ import {
   LogOut,
   PenSquare,
 } from "lucide-react"
+import { useAuth } from "@/firebase"
 
 const menuItems = [
   { href: "/dashboard", label: "Início", icon: Home },
@@ -35,13 +36,14 @@ const menuItems = [
 export function AppSidebar() {
   const pathname = usePathname()
   const router = useRouter()
+  const auth = useAuth()
 
   const isActive = (href: string) => {
     return pathname === href || pathname.startsWith(`${href}/`)
   }
 
-  const handleLogout = () => {
-    // In a real app, you'd clear session/token here
+  const handleLogout = async () => {
+    await auth.signOut();
     router.push("/")
   }
 

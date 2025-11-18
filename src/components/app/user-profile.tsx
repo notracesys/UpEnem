@@ -14,15 +14,24 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { useRouter } from 'next/navigation';
-import { LogOut, Settings } from 'lucide-react';
+import { LogOut, Settings, User as UserIcon } from 'lucide-react';
+import { useAuth, useUser } from "@/firebase";
 
 
 export function UserProfile() {
     const router = useRouter();
+    const auth = useAuth();
+    const { user } = useUser();
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        await auth.signOut();
         router.push("/");
     };
+
+    const getInitials = (email?: string | null) => {
+        if (!email) return <UserIcon />;
+        return email.substring(0, 1).toUpperCase();
+    }
 
     return (
         <DropdownMenu>
@@ -32,20 +41,20 @@ export function UserProfile() {
                     className="flex items-center gap-2 rounded-full p-1 pr-3"
                 >
                     <Avatar className="h-8 w-8">
-                        <AvatarImage src={`https://picsum.photos/seed/user-avatar/100/100`} alt="Avatar" />
-                        <AvatarFallback>U</AvatarFallback>
+                        {user?.photoURL ? <AvatarImage src={user.photoURL} alt="Avatar" /> : null}
+                        <AvatarFallback>{getInitials(user?.email)}</AvatarFallback>
                     </Avatar>
                     <div className="text-left hidden sm:block">
-                        <p className="text-sm font-medium">aluno@ocorretor.ia</p>
+                        <p className="text-sm font-medium">{user?.email || "Usuário"}</p>
                     </div>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">Usuário</p>
+                        <p className="text-sm font-medium leading-none">{user?.displayName || "Usuário"}</p>
                         <p className="text-xs leading-none text-muted-foreground">
-                            aluno@ocorretor.ia
+                            {user?.email}
                         </p>
                     </div>
                 </DropdownMenuLabel>
