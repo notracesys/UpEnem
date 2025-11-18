@@ -1,3 +1,4 @@
+
 "use client"
 import {
     Avatar,
@@ -25,7 +26,7 @@ export function UserProfile() {
 
     const handleLogout = async () => {
         await auth.signOut();
-        router.push("/");
+        router.push("/login");
     };
 
     const getInitials = (email?: string | null) => {

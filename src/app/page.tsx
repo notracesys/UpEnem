@@ -1,17 +1,29 @@
-import { LoginForm } from '@/components/app/login-form';
+
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { PenSquare } from 'lucide-react';
 
-export default function LoginPage() {
+export default function SplashPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      router.push('/login');
+    }, 3000); // 3 seconds
+
+    return () => clearTimeout(timer);
+  }, [router]);
+
   return (
     <main className="font-body">
-      <div className="flex min-h-screen w-full">
-        <div className="hidden lg:flex flex-col items-center justify-center flex-1 bg-foreground text-background p-8">
-          <PenSquare className="w-24 h-24 text-primary" />
-          <h1 className="mt-4 text-5xl font-bold font-headline text-center">UpEnem</h1>
-          <p className="mt-2 text-xl text-center text-muted-foreground/80">Sua plataforma completa para o ENEM.</p>
-        </div>
-        <div className="w-full lg:w-1/2 2xl:w-1/3 flex items-center justify-center bg-background p-4">
-          <LoginForm />
+      <div className="flex h-screen w-full items-center justify-center bg-background">
+        <div className="flex flex-col items-center justify-center animate-in fade-in zoom-in-75 duration-1000">
+          <PenSquare className="h-24 w-24 text-primary" />
+          <h1 className="mt-4 text-5xl font-bold font-headline text-center">
+            UpEnem
+          </h1>
         </div>
       </div>
     </main>
