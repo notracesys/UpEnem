@@ -261,7 +261,7 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
         } else {
           toast({
             title: "Erro na Correção",
-            description: "Não foi possível gerar o feedback. Tente novamente.",
+            description: "Não foi possível gerar o feedback. Verifique sua chave de API e tente novamente.",
             variant: "destructive",
           });
         }
@@ -276,7 +276,7 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
         } else {
           toast({
             title: "Erro na Correção",
-            description: "Ocorreu um erro inesperado. Tente novamente mais tarde.",
+            description: "Ocorreu um erro inesperado. Verifique a configuração da sua chave de API e tente novamente.",
             variant: "destructive",
           });
         }
@@ -365,5 +365,7 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
     </>
   );
 }
+
+    
 
     
