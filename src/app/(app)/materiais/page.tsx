@@ -10,7 +10,7 @@ const categories: { id: string; name: string; icon: LucideIcon; link: string; }[
   { id: "linguagens", name: "Linguagens e Códigos", icon: FileText, link: "https://drive.google.com/drive/folders/1LFDklIdKwuERrDCOHeaBt_g28heN7DUF?usp=sharing" },
   { id: "humanas", name: "Ciências Humanas", icon: Landmark, link: "https://drive.google.com/drive/folders/1_57PFjgM4EMhyY6K2kbn_CrQy-BasZjT?usp=sharing" },
   { id: "natureza", name: "Ciências da Natureza", icon: FlaskConical, link: "https://drive.google.com/drive/folders/1IMEU2EHPxmxtcLyRslLw6aqsgHCX6u5-?usp=sharing" },
-  { id: "matematica", name: "Matemática", icon: Sigma, link: "#" },
+  { id: "matematica", name: "Matemática", icon: Sigma, link: "https://drive.google.com/drive/folders/1asAxfUd-NL9QZ1Kuy4vH9bjrQmNpC5PR?usp=sharing" },
   { id: "redacao", name: "Redação", icon: Feather, link: "#" },
 ];
 
