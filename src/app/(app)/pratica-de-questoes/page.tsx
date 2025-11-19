@@ -1,5 +1,4 @@
 
-
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ClipboardCheck, FileQuestion, History } from "lucide-react";
@@ -10,8 +9,8 @@ const simulations = [
     icon: ClipboardCheck,
     title: "Testes Completos",
     description: "Teste seus conhecimentos em todas as áreas com testes no modelo do ENEM.",
-    link: "#",
-    disabled: true,
+    link: "https://drive.google.com/drive/folders/1hgKwX27qULAZ-_9zz_LZOzMVeEiT3yez?usp=sharing",
+    disabled: false,
   },
   {
     icon: FileQuestion,
