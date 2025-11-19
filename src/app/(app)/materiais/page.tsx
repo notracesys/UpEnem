@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -6,7 +7,7 @@ import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 
 const categories: { id: string; name: string; icon: LucideIcon; link: string; }[] = [
-  { id: "linguagens", name: "Linguagens e Códigos", icon: FileText, link: "#" },
+  { id: "linguagens", name: "Linguagens e Códigos", icon: FileText, link: "https://drive.google.com/drive/folders/1LFDklIdKwuERrDCOHeaBt_g28heN7DUF?usp=sharing" },
   { id: "humanas", name: "Ciências Humanas", icon: Landmark, link: "https://drive.google.com/drive/folders/1_57PFjgM4EMhyY6K2kbn_CrQy-BasZjT?usp=sharing" },
   { id: "natureza", name: "Ciências da Natureza", icon: FlaskConical, link: "https://drive.google.com/drive/folders/1IMEU2EHPxmxtcLyRslLw6aqsgHCX6u5-?usp=sharing" },
   { id: "matematica", name: "Matemática", icon: Sigma, link: "#" },
