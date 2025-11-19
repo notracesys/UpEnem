@@ -93,16 +93,18 @@ export default function DashboardPage() {
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </div>
               ) : (
-                <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={chartData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis allowDecimals={false} />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="Tópicos" fill="hsl(var(--primary))" />
-                    </BarChart>
-                </ResponsiveContainer>
+                <div className="flex justify-center items-center h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={chartData}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis allowDecimals={false} />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="Tópicos" fill="hsl(var(--primary))" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
               )}
             </CardContent>
         </Card>
