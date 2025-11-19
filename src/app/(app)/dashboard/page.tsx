@@ -12,6 +12,7 @@ import { useCollection, useUser, useFirestore, useMemoFirebase } from "@/firebas
 import { collection, query }from "firebase/firestore";
 import type { StudyTask } from "@/lib/types";
 import { useEffect, useState, useMemo } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const daysOfWeek = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"];
 
@@ -20,6 +21,7 @@ export default function DashboardPage() {
   const [motivationalQuote, setMotivationalQuote] = useState<{quote: string, author: string} | null>(null);
   const { user } = useUser();
   const firestore = useFirestore();
+  const { toast } = useToast();
 
   const scheduleQuery = useMemoFirebase(() => 
     user ? query(collection(firestore, 'users', user.uid, 'schedule')) : null, 
@@ -36,6 +38,31 @@ export default function DashboardPage() {
       });
     });
   }, []);
+
+  const today = useMemo(() => {
+    const d = new Date();
+    return d.toLocaleDateString('pt-BR', { weekday: 'long' }).charAt(0).toUpperCase() + d.toLocaleDateString('pt-BR', { weekday: 'long' }).slice(1);
+  }, []);
+
+  const tasksForToday = useMemo(() => {
+    return schedule?.filter(task => task.dayOfWeek === today) ?? [];
+  }, [schedule, today]);
+
+
+  useEffect(() => {
+    if (!isLoading && tasksForToday.length > 0) {
+      const todayStr = new Date().toISOString().split('T')[0];
+      const lastNotified = localStorage.getItem('lastNotified');
+
+      if (lastNotified !== todayStr) {
+        toast({
+          title: `Olá! Você tem ${tasksForToday.length} ${tasksForToday.length > 1 ? 'tarefas' : 'tarefa'} hoje.`,
+          description: "Vamos começar? Bons estudos!",
+        });
+        localStorage.setItem('lastNotified', todayStr);
+      }
+    }
+  }, [isLoading, tasksForToday, toast]);
 
   const chartData = useMemo(() => daysOfWeek.map(day => ({
     name: day.substring(0, 3),
