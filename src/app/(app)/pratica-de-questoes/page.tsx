@@ -16,8 +16,8 @@ const simulations = [
     icon: FileQuestion,
     title: "Testes por Área",
     description: "Foque em áreas específicas do conhecimento para reforçar seus pontos fracos.",
-    link: "#",
-    disabled: true,
+    link: "https://drive.google.com/drive/folders/1q5GSUXxRNqdKUC_HH23MuWwLPcYNkFAO?usp=sharing",
+    disabled: false,
   },
   {
     icon: History,
