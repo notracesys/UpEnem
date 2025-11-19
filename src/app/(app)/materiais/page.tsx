@@ -46,7 +46,7 @@ export default function StudyMaterialsPage() {
               </CardContent>
               <CardFooter>
                 <Link href={category.link} passHref target="_blank" rel="noopener noreferrer" className="w-full">
-                  <Button variant="outline" className="w-full">Ver Materiais</Button>
+                  <Button className="w-full">Ver Materiais</Button>
                 </Link>
               </CardFooter>
             </Card>
