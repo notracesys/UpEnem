@@ -8,7 +8,7 @@ import Link from "next/link";
 const categories: { id: string; name: string; icon: LucideIcon; link: string; }[] = [
   { id: "linguagens", name: "Linguagens e Códigos", icon: FileText, link: "#" },
   { id: "humanas", name: "Ciências Humanas", icon: Landmark, link: "https://drive.google.com/drive/folders/1_57PFjgM4EMhyY6K2kbn_CrQy-BasZjT?usp=sharing" },
-  { id: "natureza", name: "Ciências da Natureza", icon: FlaskConical, link: "#" },
+  { id: "natureza", name: "Ciências da Natureza", icon: FlaskConical, link: "https://drive.google.com/drive/folders/1IMEU2EHPxmxtcLyRslLw6aqsgHCX6u5-?usp=sharing" },
   { id: "matematica", name: "Matemática", icon: Sigma, link: "#" },
   { id: "redacao", name: "Redação", icon: Feather, link: "#" },
 ];
