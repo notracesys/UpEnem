@@ -54,7 +54,7 @@ export default function PracticeQuestionsPage() {
             <CardFooter>
               <Button className="w-full" disabled={sim.disabled} asChild={!sim.disabled}>
                 {sim.disabled ? (
-                  "Iniciar"
+                  "Em breve"
                 ) : (
                   <Link href={sim.link} target="_blank" rel="noopener noreferrer">
                     Acessar
