@@ -16,14 +16,19 @@ const menuItems = [
 ];
 
 export function AppBottomNav() {
-  const pathname = usePathname();
   const isMobile = useIsMobile();
+  const pathname = usePathname();
 
   if (!isMobile) {
     return null;
   }
 
   const isActive = (href: string) => {
+    // Special check for Redação to avoid activating for sub-pages unless it's the main one.
+    // For others, allow activating if the path starts with the href.
+    if (href === '/redacao') {
+      return pathname === href;
+    }
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
