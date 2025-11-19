@@ -3,11 +3,12 @@
 
 import { useState, useTransition, useEffect } from "react";
 import { provideAiFeedbackOnEssay, ProvideAiFeedbackOnEssayOutput } from "@/ai/flows/provide-ai-feedback-on-essay";
+import { generateEssayTopic } from "@/ai/flows/generate-essay-topic";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Lightbulb, Loader2, Sparkles, Info, AlertTriangle, Pencil, Eye, CheckCircle } from "lucide-react";
+import { Lightbulb, Loader2, Sparkles, Info, AlertTriangle, Pencil, Eye, CheckCircle, TimerOff, Plus, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
@@ -20,6 +21,7 @@ type WritingEditorProps = {
   showTimer?: boolean;
   title: string;
   description: string;
+  onRestartWithNewTopic?: () => Promise<void>;
 };
 
 function Timer({ time, setTime }: { time: number; setTime: (time: number) => void }) {
@@ -29,7 +31,7 @@ function Timer({ time, setTime }: { time: number; setTime: (time: number) => voi
   useEffect(() => {
     if (time <= 0 || isEditing) return;
     const interval = setInterval(() => {
-      setTime(prevTime => prevTime - 1);
+      setTime(prevTime => Math.max(0, prevTime - 1));
     }, 1000);
     return () => clearInterval(interval);
   }, [time, isEditing, setTime]);
@@ -162,20 +164,74 @@ function FeedbackResult({ feedback }: { feedback: ProvideAiFeedbackOnEssayOutput
     )
 }
 
-export function WritingEditor({ topic, initialText, showTimer, title, description }: WritingEditorProps) {
+function TimesUpDisplay({ onAddTime, onRestart, isRestarting }: { onAddTime: () => void; onRestart: () => void; isRestarting: boolean; }) {
+  return (
+    <div className="absolute inset-0 bg-background/90 backdrop-blur-sm flex flex-col items-center justify-center text-center p-4 z-10 animate-in fade-in-50">
+      <TimerOff className="w-20 h-20 text-destructive mb-4" />
+      <h2 className="text-3xl font-bold font-headline mb-2">Tempo Esgotado!</h2>
+      <p className="text-muted-foreground mb-6 max-w-sm">
+        O tempo para a simulação acabou. Não se preocupe, isso faz parte do treino! O que você gostaria de fazer agora?
+      </p>
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Button size="lg" onClick={onAddTime}>
+          <Plus className="mr-2" />
+          Adicionar mais 15 minutos
+        </Button>
+        <Button size="lg" variant="outline" onClick={onRestart} disabled={isRestarting}>
+            {isRestarting ? <Loader2 className="mr-2 animate-spin" /> : <RefreshCw className="mr-2" />}
+            {isRestarting ? 'Gerando...' : 'Reiniciar com novo tema'}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+
+export function WritingEditor({ topic, initialText, showTimer, title, description, onRestartWithNewTopic }: WritingEditorProps) {
   const [essay, setEssay] = useState("");
   const [essayTitle, setEssayTitle] = useState("");
   const [essayTopic, setEssayTopic] = useState("");
   const [feedback, setFeedback] = useState<ProvideAiFeedbackOnEssayOutput | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
-  const [time, setTime] = useState(5400); // 90 minutes in seconds
+  const [time, setTime] = useState(showTimer ? 5400 : -1); // 90 minutes or disabled
+  const [isRestarting, setIsRestarting] = useState(false);
 
   useEffect(() => {
     if (topic) {
         setEssayTopic(topic);
     }
   }, [topic]);
+
+  const timeIsUp = showTimer && time === 0;
+
+  const handleAddTime = () => {
+    setTime(prevTime => prevTime + 15 * 60); // Add 15 minutes
+  };
+  
+  const handleRestart = async () => {
+    setIsRestarting(true);
+    try {
+        if (onRestartWithNewTopic) {
+            await onRestartWithNewTopic();
+        } else {
+             const result = await generateEssayTopic();
+             setEssayTopic(result.topic);
+        }
+        setEssay("");
+        setEssayTitle("");
+        setFeedback(null);
+        setTime(5400); // Reset timer to 90 minutes
+    } catch (error) {
+        toast({
+            title: "Erro ao gerar novo tema",
+            description: "Não foi possível buscar um novo tema. Por favor, tente novamente.",
+            variant: "destructive",
+        });
+    } finally {
+        setIsRestarting(false);
+    }
+  };
 
   const getFeedback = async () => {
     if (!essay.trim() && !initialText) {
@@ -230,7 +286,9 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
   
   return (
     <>
-      <div className="space-y-6">
+      <div className="space-y-6 relative">
+        {timeIsUp && <TimesUpDisplay onAddTime={handleAddTime} onRestart={handleRestart} isRestarting={isRestarting}/>}
+
         <header className="flex justify-between items-start">
             <div>
                 <h1 className="text-3xl font-bold font-headline">{title}</h1>
@@ -243,7 +301,7 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
           <Alert>
             <Lightbulb className="h-4 w-4" />
             <AlertTitle>Tema Proposto</AlertTitle>
-            <AlertDescription>{topic}</AlertDescription>
+            <AlertDescription>{essayTopic}</AlertDescription>
           </Alert>
         )}
 
@@ -255,7 +313,7 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
                     placeholder="Digite o tema da redação"
                     value={essayTopic}
                     onChange={(e) => setEssayTopic(e.target.value)} 
-                    disabled={isPending || (!!topic && !topic.includes("Não foi possível carregar"))}
+                    disabled={isPending || (!!topic && !topic.includes("Não foi possível carregar")) || timeIsUp}
                     readOnly={!!topic && !topic.includes("Não foi possível carregar")}
                 />
             </div>
@@ -266,7 +324,7 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
                     placeholder="Digite o título da redação"
                     value={essayTitle}
                     onChange={(e) => setEssayTitle(e.target.value)} 
-                    disabled={isPending}
+                    disabled={isPending || timeIsUp}
                 />
             </div>
         </div>
@@ -288,9 +346,9 @@ export function WritingEditor({ topic, initialText, showTimer, title, descriptio
           className="min-h-[50vh] text-base"
           value={essay}
           onChange={(e) => setEssay(e.target.value)}
-          disabled={isPending}
+          disabled={isPending || timeIsUp}
         />
-        <Button onClick={getFeedback} disabled={isPending} size="lg" className="w-full sm:w-auto">
+        <Button onClick={getFeedback} disabled={isPending || timeIsUp} size="lg" className="w-full sm:w-auto">
           {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
           {isPending ? "Analisando..." : "Corrigir com IA"}
         </Button>
