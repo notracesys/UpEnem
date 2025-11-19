@@ -5,6 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const faqs = [
   {
@@ -50,7 +51,9 @@ export default function SupportPage() {
       <section className="text-center p-8 border-dashed border-2 rounded-lg">
         <h2 className="text-2xl font-bold font-headline mb-2">Não encontrou o que precisava?</h2>
         <p className="text-muted-foreground mb-6">Nossa equipe de suporte está pronta para te ajudar com qualquer outra questão.</p>
-        <Button size="lg">Abrir Chamado</Button>
+        <Button size="lg" asChild>
+          <a href="mailto:upenem.suporte@gmail.com">Abrir Chamado</a>
+        </Button>
       </section>
     </div>
   );
