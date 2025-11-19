@@ -1,23 +1,31 @@
 
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ClipboardCheck, FileQuestion, History } from "lucide-react";
+import Link from "next/link";
 
 const simulations = [
   {
     icon: ClipboardCheck,
     title: "Testes Completos",
     description: "Teste seus conhecimentos em todas as áreas com testes no modelo do ENEM.",
+    link: "#",
+    disabled: true,
   },
   {
     icon: FileQuestion,
     title: "Testes por Área",
     description: "Foque em áreas específicas do conhecimento para reforçar seus pontos fracos.",
+    link: "#",
+    disabled: true,
   },
   {
     icon: History,
     title: "Provas Anteriores",
     description: "Refaça provas de edições passadas do ENEM e outros vestibulares.",
+    link: "https://drive.google.com/drive/folders/1H2LpL4LktUJBnuCJh9nBU1-27xIQtZL5?usp=sharing",
+    disabled: false,
   },
 ];
 
@@ -44,7 +52,15 @@ export default function PracticeQuestionsPage() {
               <CardDescription>{sim.description}</CardDescription>
             </CardContent>
             <CardFooter>
-              <Button className="w-full">Iniciar</Button>
+              <Button className="w-full" disabled={sim.disabled} asChild={!sim.disabled}>
+                {sim.disabled ? (
+                  "Iniciar"
+                ) : (
+                  <Link href={sim.link} target="_blank" rel="noopener noreferrer">
+                    Iniciar
+                  </Link>
+                )}
+              </Button>
             </CardFooter>
           </Card>
         ))}
