@@ -24,7 +24,7 @@ export default function StudyMaterialsPage() {
         <p className="text-muted-foreground">Acesse apostilas e materiais de estudo para aprofundar seus conhecimentos.</p>
       </header>
 
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-5">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
         {categories.map(category => {
           const Icon = category.icon;
           return (
@@ -46,7 +46,7 @@ export default function StudyMaterialsPage() {
               </CardContent>
               <CardFooter>
                 <Link href={category.link} passHref target="_blank" rel="noopener noreferrer" className="w-full">
-                  <Button className="w-full">Ver Materiais</Button>
+                  <Button variant="outline" className="w-full">Ver Materiais</Button>
                 </Link>
               </CardFooter>
             </Card>
