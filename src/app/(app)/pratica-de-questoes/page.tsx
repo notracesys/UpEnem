@@ -57,7 +57,7 @@ export default function PracticeQuestionsPage() {
                   "Iniciar"
                 ) : (
                   <Link href={sim.link} target="_blank" rel="noopener noreferrer">
-                    Iniciar
+                    Acessar
                   </Link>
                 )}
               </Button>
